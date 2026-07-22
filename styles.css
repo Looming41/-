@@ -24,7 +24,7 @@
 }
 
 *{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;overflow-x:hidden;width:100%;}
 body{
   margin:0;
   font-family:var(--font-body);
@@ -33,6 +33,8 @@ body{
   font-size:16px;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  width:100%;
 }
 img{max-width:100%;display:block;}
 a{color:inherit;text-decoration:none;}
@@ -147,6 +149,18 @@ button:focus-visible{
   color:var(--color-bg);
 }
 .header-cta{display:flex;align-items:center;gap:var(--space-md);}
+.nav-toggle{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  width:40px;height:40px;
+  background:none;
+  border:none;
+  color:var(--color-fg);
+  cursor:pointer;
+  flex-shrink:0;
+}
+.nav-toggle svg{width:24px;height:24px;}
 
 /* ---------- Hero (home) ---------- */
 .hero{
@@ -862,11 +876,27 @@ footer{background:var(--color-fg);color:#B9C4D9;padding:var(--space-xl) 0 var(--
   .hero .container{gap:var(--space-lg);}
 }
 @media (max-width:768px){
-  .nav-links{display:none;}
+  .site-header .container{flex-wrap:wrap;row-gap:8px;}
+  .nav-toggle{display:inline-flex;order:2;}
+  .header-cta{order:3;}
+  .header-cta .btn{padding:9px 16px;font-size:0.85rem;}
+  .nav-links{
+    display:none;
+    order:4;
+    width:100%;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:0;
+    padding-top:8px;
+    border-top:1px solid var(--color-border);
+  }
+  .nav-links.open{display:flex;}
+  .nav-links a{width:100%;padding:12px 4px;}
+  .nav-links a::after{display:none;}
   .hero .container{grid-template-columns:1fr;text-align:center;}
   .hero-copy{order:2;}
   .hero-visual{order:1;min-height:340px;}
-  .hero-sub{margin-inline:auto;}
+  .hero-sub{margin-inline:auto;max-width:100%;}
   .hero-actions{justify-content:center;}
   .services-grid, .process-grid, .value-grid{grid-template-columns:1fr;}
   .director-card{grid-template-columns:1fr;}
@@ -881,6 +911,9 @@ footer{background:var(--color-fg);color:#B9C4D9;padding:var(--space-xl) 0 var(--
 @media (max-width:480px){
   .hero-photo{width:220px;}
   .hero-visual .glow{width:300px;height:300px;}
+  .cta-banner{padding:var(--space-lg) var(--space-md);margin:0 var(--space-sm);}
+  .modal{padding:var(--space-lg) var(--space-md);}
+  .school-badge{width:96px;}
 }
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
