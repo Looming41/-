@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EC | 김은정 유학원</title>
+<meta name="description" content="Engineering/STEM/Research, Medicine/Biomedical, Economics, Statistics/Mathematics, Essay 분야별 EC(Extracurricular) 컨설팅과 학생 성과를 소개합니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="admin-bar" id="admin-bar" style="display:none;">
+  <span id="admin-bar-text">관리자 모드입니다.</span>
+  <button onclick="adminLogout()">로그아웃</button>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><span class="dot"></span>김은정 유학원</a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="philosophy.html">우리의 방향성</a>
+      <a href="ec.html" aria-current="page">EC</a>
+      <a href="top10.html">미국 극상위입시<span class="rank">(1-10위)</span></a>
+      <a href="top20.html">미국상위입시<span class="rank">(10-20위)</span></a>
+      <a href="g1-g8.html">G1-G8 입시프렙</a>
+      <a href="news.html">미국입시뉴스</a>
+    </nav>
+    <div class="header-cta">
+      <a href="booking.html" class="btn btn-primary">상담예약</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        홈으로
+      </a>
+      <span class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.4 2.4 7.2L12 16.4 5.6 20.8 8 13.6 2 9.2h7.6z"/></svg>
+        PROGRAM · EC
+      </span>
+      <h1>대학이 원하는 건 성적만이 아닙니다 — <span class="highlight">EC</span></h1>
+      <p class="hero-sub">분야별로 학생의 관심사를 실제 성과로 연결하는 EC(Extracurricular) 활동을 설계합니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container" id="ec-categories">
+      <!-- categories injected below -->
+    </div>
+  </section>
+
+  <section>
+    <div class="cta-banner">
+      <h2>우리 아이에게 맞는 EC가 궁금하다면</h2>
+      <p>상담예약을 통해 학생에게 맞는 EC 방향을 함께 찾아보세요.</p>
+      <a href="booking.html" class="btn btn-primary">상담예약하기</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo"><span class="dot"></span>김은정 유학원</a>
+        <p>학생의 꿈이 곧 나의 에세이. 해외 유학의 모든 순간, 김은정 유학원이 함께합니다.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>메뉴</h4>
+          <a href="philosophy.html">우리의 방향성</a>
+          <a href="ec.html">EC</a>
+          <a href="top10.html">미국 극상위입시</a>
+          <a href="top20.html">미국상위입시</a>
+          <a href="g1-g8.html">G1-G8 입시프렙</a>
+          <a href="news.html">미국입시뉴스</a>
+        </div>
+        <div class="footer-col">
+          <h4>문의</h4>
+          <p>이메일 : hello@kimeunjeong.edu</p>
+          <p>전화 : 02-1234-5678</p>
+          <p>평일 10:00 - 19:00</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 김은정 유학원. All rights reserved. · <a href="admin-login.html" style="text-decoration:underline;">관리자</a>
+    </div>
+  </div>
+</footer>
+
+<!-- EC achievement modal -->
+<div class="modal-overlay" id="achievement-modal">
+  <div class="modal">
+    <h3 id="achievement-modal-title">성과 추가</h3>
+    <form id="achievement-form">
+      <input type="hidden" id="achievement-form-id">
+      <div class="form-field">
+        <label for="achievement-category">분야</label>
+        <select id="achievement-category" required>
+          <option value="Engineering/STEM/Research">Engineering / STEM / Research</option>
+          <option value="Medicine/Biomedical">Medicine / Biomedical</option>
+          <option value="Economics">Economics</option>
+          <option value="Statistics/Mathematics">Statistics / Mathematics</option>
+          <option value="Essay">Essay</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="achievement-desc">설명</label>
+        <textarea id="achievement-desc" placeholder="예: OO 논문 공동 저자로 학술지 게재" required></textarea>
+      </div>
+      <div class="form-field">
+        <label for="achievement-photo">사진 <span class="optional">(수정 시 비워두면 기존 사진 유지)</span></label>
+        <input type="file" id="achievement-photo" accept="image/*">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost modal-close" onclick="closeModal('achievement-modal')">취소</button>
+        <button type="submit" class="btn btn-primary" id="achievement-submit-btn">추가</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  var CATEGORIES = [
+    { key: "Engineering/STEM/Research", label: "Engineering / STEM / Research", desc: "리서치, 공학 프로젝트, 과학경시대회 등 STEM 분야 활동을 설계합니다." },
+    { key: "Medicine/Biomedical", label: "Medicine / Biomedical", desc: "의학·생명과학 분야 리서치와 봉사, 인턴십 경험을 연결합니다." },
+    { key: "Economics", label: "Economics", desc: "경제 캠프, 논문, 창업/투자 프로젝트 등으로 실전 경험을 쌓습니다." },
+    { key: "Statistics/Mathematics", label: "Statistics / Mathematics", desc: "수학·통계 경시대회와 데이터 분석 프로젝트를 지원합니다." },
+    { key: "Essay", label: "Essay", desc: "에세이 공모전, 저널 기고 등 글쓰기 기반 활동을 함께 준비합니다." }
+  ];
+
+  var container = document.getElementById("ec-categories");
+  container.innerHTML = CATEGORIES.map(function (c, i) {
+    var slug = c.key.replace(/\//g, "-").toLowerCase();
+    return (
+      '<div style="margin-bottom:' + (i === CATEGORIES.length - 1 ? "0" : "64px") + ';" id="cat-' + slug + '">' +
+      '<div class="section-head align-left">' +
+      '<span class="section-tag">EC</span>' +
+      "<h2>" + c.label + "</h2>" +
+      "<p>" + c.desc + "</p>" +
+      "</div>" +
+      '<div class="achievement-grid" id="grid-' + slug + '"></div>' +
+      '<p class="empty-state" id="empty-' + slug + '">등록된 성과가 아직 없습니다.</p>' +
+      '<button class="add-btn admin-only" onclick="openAchievementModal(\'' + c.key + '\')">+ 성과 추가</button>' +
+      "</div>"
+    );
+  }).join("");
+
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str || "";
+    return div.innerHTML;
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add("open"); }
+  function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+  function openAchievementModal(category) {
+    document.getElementById("achievement-form").reset();
+    document.getElementById("achievement-form-id").value = "";
+    document.getElementById("achievement-category").value = category;
+    document.getElementById("achievement-modal-title").textContent = "성과 추가";
+    document.getElementById("achievement-submit-btn").textContent = "추가";
+    openModal("achievement-modal");
+  }
+
+  var achievementsData = [];
+
+  async function loadAchievements() {
+    if (!supabaseReady) return;
+    var { data, error } = await supabaseClient
+      .from("ec_achievements")
+      .select("*")
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) return;
+    achievementsData = data || [];
+
+    CATEGORIES.forEach(function (c) {
+      var slug = c.key.replace(/\//g, "-").toLowerCase();
+      var items = achievementsData.filter(function (d) { return d.category === c.key; });
+      var grid = document.getElementById("grid-" + slug);
+      var empty = document.getElementById("empty-" + slug);
+      if (items.length === 0) {
+        empty.style.display = "block";
+        grid.innerHTML = "";
+        return;
+      }
+      empty.style.display = "none";
+      grid.innerHTML = items.map(function (a) {
+        return (
+          '<div class="achievement-card">' +
+          (a.photo_url ? '<img class="photo" src="' + a.photo_url + '" alt="">' : "") +
+          '<div class="desc">' + escapeHtml(a.description) +
+          '<div class="admin-only card-actions">' +
+          '<button onclick="editAchievement(\'' + a.id + '\')">수정</button>' +
+          '<button class="danger" onclick="deleteAchievement(\'' + a.id + '\')">삭제</button>' +
+          "</div>" +
+          "</div>" +
+          "</div>"
+        );
+      }).join("");
+    });
+    toggleAdminUI(window.isAdminState);
+  }
+
+  function editAchievement(id) {
+    var a = achievementsData.find(function (x) { return x.id === id; });
+    if (!a) return;
+    document.getElementById("achievement-form-id").value = a.id;
+    document.getElementById("achievement-category").value = a.category;
+    document.getElementById("achievement-desc").value = a.description || "";
+    document.getElementById("achievement-modal-title").textContent = "성과 수정";
+    document.getElementById("achievement-submit-btn").textContent = "저장";
+    openModal("achievement-modal");
+  }
+
+  async function deleteAchievement(id) {
+    if (!confirm("정말 삭제하시겠어요?")) return;
+    var a = achievementsData.find(function (x) { return x.id === id; });
+    var { error } = await supabaseClient.from("ec_achievements").delete().eq("id", id);
+    if (error) { alert("삭제 실패: " + error.message); return; }
+    if (a) await deletePhotoIfAny(a.photo_url);
+    loadAchievements();
+  }
+
+  document.getElementById("achievement-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (!supabaseReady) { alert("Supabase가 연결되지 않았습니다."); return; }
+    var id = document.getElementById("achievement-form-id").value;
+    var file = document.getElementById("achievement-photo").files[0];
+    var photoUrl = file ? await uploadPhoto(file, "ec") : null;
+
+    var payload = {
+      category: document.getElementById("achievement-category").value,
+      description: document.getElementById("achievement-desc").value.trim()
+    };
+    if (photoUrl) payload.photo_url = photoUrl;
+
+    var query = id
+      ? supabaseClient.from("ec_achievements").update(payload).eq("id", id)
+      : supabaseClient.from("ec_achievements").insert(payload);
+    var { error } = await query;
+    if (error) { alert("저장 실패: " + error.message); return; }
+    closeModal("achievement-modal");
+    loadAchievements();
+  });
+
+  loadAchievements();
+</script>
+
+</body>
+</html>

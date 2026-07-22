@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>우리의 방향성 | 김은정 유학원</title>
-<meta name="description" content="김은정 유학원이 학생을 대하는 방식과 컨설팅 철학을 소개합니다.">
+<meta name="description" content="김은정 유학원의 가치관, 원장 소개, 원장 팀, 입시결과를 소개합니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -12,11 +12,17 @@
 </head>
 <body>
 
+<div class="admin-bar" id="admin-bar" style="display:none;">
+  <span id="admin-bar-text">관리자 모드입니다.</span>
+  <button onclick="adminLogout()">로그아웃</button>
+</div>
+
 <header class="site-header">
   <div class="container">
     <a href="index.html" class="logo"><span class="dot"></span>김은정 유학원</a>
     <nav class="nav-links" aria-label="주요 메뉴">
       <a href="philosophy.html" aria-current="page">우리의 방향성</a>
+      <a href="ec.html">EC</a>
       <a href="top10.html">미국 극상위입시<span class="rank">(1-10위)</span></a>
       <a href="top20.html">미국상위입시<span class="rank">(10-20위)</span></a>
       <a href="g1-g8.html">G1-G8 입시프렙</a>
@@ -46,32 +52,146 @@
 
   <section>
     <div class="container">
-      <div class="section-head align-left">
-        <span class="section-tag">Values</span>
-        <h2>우리가 일하는 방식</h2>
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="values" role="tab">Values</button>
+        <button class="tab-btn" data-tab="director" role="tab">김은정 원장</button>
+        <button class="tab-btn" data-tab="team" role="tab">김은정 원장 팀</button>
+        <button class="tab-btn" data-tab="results" role="tab">입시결과</button>
       </div>
-      <div class="value-grid">
-        <div class="value-card">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+
+      <!-- Values -->
+      <div class="tab-panel active" id="tab-values">
+        <div class="value-grid">
+          <div class="value-card">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <h3>진정성</h3>
+            <p>과장된 약속 대신, 학생의 현재 상황을 있는 그대로 진단하고 솔직하게 안내합니다.</p>
           </div>
-          <h3>학생 중심 스토리텔링</h3>
-          <p>모든 학생은 다른 이야기를 갖고 있습니다. 정해진 템플릿이 아니라, 학생만의 관점에서 출발합니다.</p>
-        </div>
-        <div class="value-card">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M6 21V10M12 21V6M18 21V13"/></svg>
+          <div class="value-card">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3 3-5 7-5s7 2 7 5M16 4a3 3 0 0 1 0 6M22 20c0-2.5-1.5-4-4-4.5"/></svg>
+            </div>
+            <h3>1:1 밀착 케어</h3>
+            <p>그룹 수업이 아닙니다. 학생 한 명에게 맞춘 전담 컨설팅으로 처음부터 끝까지 함께합니다.</p>
           </div>
-          <h3>데이터 기반 전략</h3>
-          <p>합격 사례와 입시 트렌드를 근거로, 감이 아닌 데이터로 현실적인 목표와 로드맵을 제시합니다.</p>
-        </div>
-        <div class="value-card">
-          <div class="service-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v18M5 4h11l-2 4 2 4H5"/></svg>
+          <div class="value-card">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M6 21V10M12 21V6M18 21V13"/></svg>
+            </div>
+            <h3>데이터 기반 전략</h3>
+            <p>합격 사례와 입시 트렌드를 근거로, 감이 아닌 데이터로 현실적인 목표와 로드맵을 제시합니다.</p>
           </div>
-          <h3>끝까지 함께하는 동행</h3>
-          <p>서류 제출로 끝이 아닙니다. 합격 이후 비자와 출국 준비까지, 학생 곁을 지킵니다.</p>
+          <div class="value-card">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v18M5 4h11l-2 4 2 4H5"/></svg>
+            </div>
+            <h3>끝까지 함께하는 동행</h3>
+            <p>서류 제출로 끝이 아닙니다. 합격 이후 비자와 출국 준비까지, 학생 곁을 지킵니다.</p>
+          </div>
         </div>
+      </div>
+
+      <!-- 김은정 원장 -->
+      <div class="tab-panel" id="tab-director">
+        <div class="director-card">
+          <div>
+            <img class="photo" src="assets/kim-eunjeong-cutout.png" alt="김은정 원장">
+            <div class="director-badges">
+              <div class="director-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
+                2025년 대한민국교육혁신상 수상
+              </div>
+              <div class="director-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="15" height="12" rx="2"/><path d="M17 10l5-3v10l-5-3"/></svg>
+                KBS 인터뷰 출연
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2 style="font-size:1.4rem;margin-bottom:4px;">김은정</h2>
+            <p style="color:var(--color-muted-fg);margin-bottom:var(--space-lg);">김은정 유학원 원장 · 유학 컨설팅 전문가</p>
+
+            <div class="career-list">
+              <h4>총 경력 15년</h4>
+
+              <div class="career-item">
+                <div class="role">LaT 유학원</div>
+                <div class="period">2024년 8월 - 현재 · 2년</div>
+                <div class="desc">유학컨설팅, 관리기술사가 함께 있는 LaT유학원의 원장</div>
+              </div>
+              <div class="career-item">
+                <div class="role">김은정유학원</div>
+                <div class="period">2018년 10월 - 현재 · 7년 10개월</div>
+                <div class="desc">LaT 유학원과 협업으로 원장의 책임을 다하고 있습니다.</div>
+              </div>
+              <div class="career-item">
+                <div class="role">청담수능강의, 통/번역, 유학컨설팅</div>
+                <div class="period">2008년 10월 - 현재 · 17년 10개월</div>
+                <div class="desc">유아~성인 유학컨설팅, 국내/개인 영어과외/청담동 수능현장강의</div>
+              </div>
+
+              <div class="career-more" id="career-more">
+                <div class="career-item">
+                  <div class="role">미국 경영대학원 MBA 수료</div>
+                  <div class="period">2016년 9월 - 2017년 9월 · 1년 1개월</div>
+                  <div class="desc">미국 보스턴 Business School 경영학사</div>
+                </div>
+                <div class="career-item">
+                  <div class="role">미국 Bank of America</div>
+                  <div class="period">2017년 10월 - 2019년 1월 · 1년 4개월</div>
+                  <div class="desc">하버드점, Central Square점 매니저근무</div>
+                </div>
+                <div class="career-item">
+                  <div class="role">고려대 통번역대학원</div>
+                  <div class="period">2010년 3월 - 2011년 3월 · 1년 1개월</div>
+                  <div class="desc">고려대-호주 맥쿼리대학 통번역과정 수료</div>
+                </div>
+                <div class="career-item">
+                  <div class="role">SKEREN Design School</div>
+                  <div class="period">2019년 11월 - 현재 · 6년 9개월</div>
+                  <div class="desc">전세계 학생 대상 SKEREN Online Design School 운영</div>
+                </div>
+                <div class="career-item">
+                  <div class="role">일본 신세이뱅크, 자산유동화</div>
+                  <div class="period">2010년 10월 - 2015년 2월 · 4년 5개월</div>
+                  <div class="desc">일본 신세이 뱅크 자금으로 국내 메이저 은행의 NPL채권 매각</div>
+                </div>
+              </div>
+              <button class="career-toggle" id="career-toggle" onclick="toggleCareer()">
+                경력 전체보기
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+
+              <h4 style="margin-top:var(--space-xl);">학력</h4>
+              <div class="career-item">
+                <div class="role">MBA 석사, Boston, US</div>
+                <div class="period">2016년 9월 - 2017년 9월</div>
+                <div class="desc">경영석사</div>
+              </div>
+              <div class="career-item" style="border-bottom:none;">
+                <div class="role">고려대학교 통번역 과정 이수</div>
+                <div class="period">2010년 3월 - 2011년 3월</div>
+                <div class="desc">한-영 통번역과정</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 김은정 원장 팀 -->
+      <div class="tab-panel" id="tab-team">
+        <div class="team-grid" id="team-grid"></div>
+        <p class="empty-state" id="team-empty">등록된 팀원이 아직 없습니다.</p>
+        <button class="add-btn admin-only" onclick="openTeamModal()">+ 팀원 추가</button>
+      </div>
+
+      <!-- 입시결과 -->
+      <div class="tab-panel" id="tab-results">
+        <div class="result-grid" id="results-grid"></div>
+        <p class="empty-state" id="results-empty">등록된 입시결과가 아직 없습니다.</p>
+        <button class="add-btn admin-only" onclick="openResultModal()">+ 입시결과 추가</button>
       </div>
     </div>
   </section>
@@ -104,6 +224,7 @@
         <div class="footer-col">
           <h4>메뉴</h4>
           <a href="philosophy.html">우리의 방향성</a>
+          <a href="ec.html">EC</a>
           <a href="top10.html">미국 극상위입시</a>
           <a href="top20.html">미국상위입시</a>
           <a href="g1-g8.html">G1-G8 입시프렙</a>
@@ -117,9 +238,275 @@
         </div>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 김은정 유학원. All rights reserved.</div>
+    <div class="footer-bottom">
+      © 2026 김은정 유학원. All rights reserved. · <a href="admin-login.html" style="text-decoration:underline;">관리자</a>
+    </div>
   </div>
 </footer>
+
+<!-- Team member modal -->
+<div class="modal-overlay" id="team-modal">
+  <div class="modal">
+    <h3 id="team-modal-title">팀원 추가</h3>
+    <form id="team-form">
+      <input type="hidden" id="team-form-id">
+      <div class="form-field">
+        <label for="team-name">이름</label>
+        <input type="text" id="team-name" required>
+      </div>
+      <div class="form-field">
+        <label for="team-position">현재소속</label>
+        <input type="text" id="team-position" placeholder="예: 現 OO교육연구소 소장">
+      </div>
+      <div class="form-field">
+        <label for="team-education">학력 <span class="optional">(줄바꿈으로 구분)</span></label>
+        <textarea id="team-education" placeholder="예: OO대학교 졸업&#10;OO대학원 석사"></textarea>
+      </div>
+      <div class="form-field">
+        <label for="team-career">경력 및 저서 <span class="optional">(줄바꿈으로 구분)</span></label>
+        <textarea id="team-career" placeholder="예: OO기업 컨설턴트&#10;저서: OOOO"></textarea>
+      </div>
+      <div class="form-field">
+        <label for="team-photo">얼굴 사진 <span class="optional">(수정 시 비워두면 기존 사진 유지)</span></label>
+        <input type="file" id="team-photo" accept="image/*">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost modal-close" onclick="closeModal('team-modal')">취소</button>
+        <button type="submit" class="btn btn-primary" id="team-submit-btn">추가</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Admission result modal -->
+<div class="modal-overlay" id="result-modal">
+  <div class="modal">
+    <h3 id="result-modal-title">입시결과 추가</h3>
+    <form id="result-form">
+      <input type="hidden" id="result-form-id">
+      <div class="form-field">
+        <label for="result-school">학교 이름</label>
+        <input type="text" id="result-school" required>
+      </div>
+      <div class="form-field">
+        <label for="result-photo">사진 / 로고 <span class="optional">(수정 시 비워두면 기존 사진 유지)</span></label>
+        <input type="file" id="result-photo" accept="image/*">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost modal-close" onclick="closeModal('result-modal')">취소</button>
+        <button type="submit" class="btn btn-primary" id="result-submit-btn">추가</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  // Tabs
+  document.querySelectorAll(".tab-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+      document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
+      btn.classList.add("active");
+      document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+    });
+  });
+
+  // Career expand/collapse
+  function toggleCareer() {
+    var more = document.getElementById("career-more");
+    var toggle = document.getElementById("career-toggle");
+    var open = more.classList.toggle("open");
+    toggle.classList.toggle("open", open);
+    toggle.childNodes[0].textContent = open ? "경력 접기 " : "경력 전체보기 ";
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add("open"); }
+  function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+  function openTeamModal() {
+    document.getElementById("team-form").reset();
+    document.getElementById("team-form-id").value = "";
+    document.getElementById("team-modal-title").textContent = "팀원 추가";
+    document.getElementById("team-submit-btn").textContent = "추가";
+    openModal("team-modal");
+  }
+  function openResultModal() {
+    document.getElementById("result-form").reset();
+    document.getElementById("result-form-id").value = "";
+    document.getElementById("result-modal-title").textContent = "입시결과 추가";
+    document.getElementById("result-submit-btn").textContent = "추가";
+    openModal("result-modal");
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str || "";
+    return div.innerHTML;
+  }
+  function nl2li(str) {
+    return (str || "").split("\n").map(function (line) { return line.trim(); })
+      .filter(Boolean).map(function (line) { return escapeHtml(line); }).join("<br>");
+  }
+
+  var teamData = [];
+  var resultsData = [];
+
+  async function loadTeam() {
+    var grid = document.getElementById("team-grid");
+    var empty = document.getElementById("team-empty");
+    if (!supabaseReady) { return; }
+    var { data, error } = await supabaseClient
+      .from("team_members")
+      .select("*")
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    teamData = data || [];
+    if (error || teamData.length === 0) {
+      empty.style.display = "block";
+      grid.innerHTML = "";
+      return;
+    }
+    empty.style.display = "none";
+    grid.innerHTML = teamData.map(function (m) {
+      return (
+        '<div class="team-card">' +
+        '<img class="photo" src="' + (m.photo_url || "assets/kim-eunjeong-cutout.png") + '" alt="' + escapeHtml(m.name) + '">' +
+        "<div>" +
+        "<h4>" + escapeHtml(m.name) + "</h4>" +
+        (m.position ? '<div class="field"><span class="team-tag">현재소속</span><br>' + escapeHtml(m.position) + "</div>" : "") +
+        (m.education ? '<div class="field"><span class="team-tag">학력</span><br>' + nl2li(m.education) + "</div>" : "") +
+        (m.career ? '<div class="field"><span class="team-tag">경력 및 저서</span><br>' + nl2li(m.career) + "</div>" : "") +
+        '<div class="admin-only card-actions">' +
+        '<button onclick="editTeamMember(\'' + m.id + '\')">수정</button>' +
+        '<button class="danger" onclick="deleteTeamMember(\'' + m.id + '\')">삭제</button>' +
+        "</div>" +
+        "</div></div>"
+      );
+    }).join("");
+    toggleAdminUI(window.isAdminState);
+  }
+
+  async function loadResults() {
+    var grid = document.getElementById("results-grid");
+    var empty = document.getElementById("results-empty");
+    if (!supabaseReady) { return; }
+    var { data, error } = await supabaseClient
+      .from("admission_results")
+      .select("*")
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    resultsData = data || [];
+    if (error || resultsData.length === 0) {
+      empty.style.display = "block";
+      grid.innerHTML = "";
+      return;
+    }
+    empty.style.display = "none";
+    grid.innerHTML = resultsData.map(function (r) {
+      return (
+        '<div class="result-card">' +
+        '<img class="photo" src="' + (r.photo_url || "") + '" alt="' + escapeHtml(r.school_name) + '">' +
+        '<div class="caption">' + escapeHtml(r.school_name) + "</div>" +
+        '<div class="admin-only card-actions">' +
+        '<button onclick="editResult(\'' + r.id + '\')">수정</button>' +
+        '<button class="danger" onclick="deleteResult(\'' + r.id + '\')">삭제</button>' +
+        "</div>" +
+        "</div>"
+      );
+    }).join("");
+    toggleAdminUI(window.isAdminState);
+  }
+
+  function editTeamMember(id) {
+    var m = teamData.find(function (x) { return x.id === id; });
+    if (!m) return;
+    document.getElementById("team-form-id").value = m.id;
+    document.getElementById("team-name").value = m.name || "";
+    document.getElementById("team-position").value = m.position || "";
+    document.getElementById("team-education").value = m.education || "";
+    document.getElementById("team-career").value = m.career || "";
+    document.getElementById("team-modal-title").textContent = "팀원 수정";
+    document.getElementById("team-submit-btn").textContent = "저장";
+    openModal("team-modal");
+  }
+
+  async function deleteTeamMember(id) {
+    if (!confirm("정말 삭제하시겠어요?")) return;
+    var m = teamData.find(function (x) { return x.id === id; });
+    var { error } = await supabaseClient.from("team_members").delete().eq("id", id);
+    if (error) { alert("삭제 실패: " + error.message); return; }
+    if (m) await deletePhotoIfAny(m.photo_url);
+    loadTeam();
+  }
+
+  function editResult(id) {
+    var r = resultsData.find(function (x) { return x.id === id; });
+    if (!r) return;
+    document.getElementById("result-form-id").value = r.id;
+    document.getElementById("result-school").value = r.school_name || "";
+    document.getElementById("result-modal-title").textContent = "입시결과 수정";
+    document.getElementById("result-submit-btn").textContent = "저장";
+    openModal("result-modal");
+  }
+
+  async function deleteResult(id) {
+    if (!confirm("정말 삭제하시겠어요?")) return;
+    var r = resultsData.find(function (x) { return x.id === id; });
+    var { error } = await supabaseClient.from("admission_results").delete().eq("id", id);
+    if (error) { alert("삭제 실패: " + error.message); return; }
+    if (r) await deletePhotoIfAny(r.photo_url);
+    loadResults();
+  }
+
+  document.getElementById("team-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (!supabaseReady) { alert("Supabase가 연결되지 않았습니다."); return; }
+    var id = document.getElementById("team-form-id").value;
+    var file = document.getElementById("team-photo").files[0];
+    var photoUrl = file ? await uploadPhoto(file, "team") : null;
+
+    var payload = {
+      name: document.getElementById("team-name").value.trim(),
+      position: document.getElementById("team-position").value.trim(),
+      education: document.getElementById("team-education").value.trim(),
+      career: document.getElementById("team-career").value.trim()
+    };
+    if (photoUrl) payload.photo_url = photoUrl;
+
+    var query = id
+      ? supabaseClient.from("team_members").update(payload).eq("id", id)
+      : supabaseClient.from("team_members").insert(payload);
+    var { error } = await query;
+    if (error) { alert("저장 실패: " + error.message); return; }
+    closeModal("team-modal");
+    loadTeam();
+  });
+
+  document.getElementById("result-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (!supabaseReady) { alert("Supabase가 연결되지 않았습니다."); return; }
+    var id = document.getElementById("result-form-id").value;
+    var file = document.getElementById("result-photo").files[0];
+    var photoUrl = file ? await uploadPhoto(file, "results") : null;
+
+    var payload = { school_name: document.getElementById("result-school").value.trim() };
+    if (photoUrl) payload.photo_url = photoUrl;
+
+    var query = id
+      ? supabaseClient.from("admission_results").update(payload).eq("id", id)
+      : supabaseClient.from("admission_results").insert(payload);
+    var { error } = await query;
+    if (error) { alert("저장 실패: " + error.message); return; }
+    closeModal("result-modal");
+    loadResults();
+  });
+
+  loadTeam();
+  loadResults();
+</script>
 
 </body>
 </html>

@@ -12,11 +12,17 @@
 </head>
 <body>
 
+<div class="admin-bar" id="admin-bar" style="display:none;">
+  <span id="admin-bar-text">관리자 모드입니다.</span>
+  <button onclick="adminLogout()">로그아웃</button>
+</div>
+
 <header class="site-header">
   <div class="container">
     <a href="index.html" class="logo"><span class="dot"></span>김은정 유학원</a>
     <nav class="nav-links" aria-label="주요 메뉴">
       <a href="philosophy.html">우리의 방향성</a>
+      <a href="ec.html">EC</a>
       <a href="top10.html">미국 극상위입시<span class="rank">(1-10위)</span></a>
       <a href="top20.html">미국상위입시<span class="rank">(10-20위)</span></a>
       <a href="g1-g8.html">G1-G8 입시프렙</a>
@@ -40,24 +46,15 @@
         PROGRAM · 입시뉴스
       </span>
       <h1>미국 입시, <span class="highlight">가장 빠르게</span> 전달합니다</h1>
-      <p class="hero-sub">정책 변화, 지원 마감 일정, 합격 트렌드까지 — 김은정 유학원이 놓치지 않고 정리해 전달할 예정입니다. 콘텐츠 페이지를 준비 중입니다.</p>
+      <p class="hero-sub">정책 변화, 지원 마감 일정, 합격 트렌드까지 — 김은정 유학원이 정리해 전달합니다.</p>
     </div>
   </section>
 
   <section>
     <div class="container">
-      <div class="section-head align-left">
-        <span class="section-tag">Coming soon</span>
-        <h2>이런 소식을 다룰 예정입니다</h2>
-        <p style="max-width:none;text-align:left;">정식 오픈 전까지, 상담을 통해 최신 입시 정보를 먼저 안내받으실 수 있습니다.</p>
-      </div>
-      <div class="chip-row">
-        <span class="chip">입시 정책 변화</span>
-        <span class="chip">지원 마감 일정 안내</span>
-        <span class="chip">연도별 합격 트렌드</span>
-        <span class="chip">에세이 작성 팁</span>
-        <span class="chip">주니어 보딩스쿨 소식</span>
-      </div>
+      <div class="post-list" id="post-list"></div>
+      <p class="empty-state" id="post-empty">등록된 글이 아직 없습니다.</p>
+      <button class="add-btn admin-only" onclick="openPostModal()">+ 글 추가</button>
     </div>
   </section>
 
@@ -81,6 +78,7 @@
         <div class="footer-col">
           <h4>메뉴</h4>
           <a href="philosophy.html">우리의 방향성</a>
+          <a href="ec.html">EC</a>
           <a href="top10.html">미국 극상위입시</a>
           <a href="top20.html">미국상위입시</a>
           <a href="g1-g8.html">G1-G8 입시프렙</a>
@@ -94,9 +92,129 @@
         </div>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 김은정 유학원. All rights reserved.</div>
+    <div class="footer-bottom">© 2026 김은정 유학원. All rights reserved. · <a href="admin-login.html" style="text-decoration:underline;">관리자</a></div>
   </div>
 </footer>
+
+<!-- News post modal -->
+<div class="modal-overlay" id="post-modal">
+  <div class="modal">
+    <h3 id="post-modal-title">글 추가</h3>
+    <form id="post-form">
+      <input type="hidden" id="post-form-id">
+      <div class="form-field">
+        <label for="post-title">제목</label>
+        <input type="text" id="post-title" required>
+      </div>
+      <div class="form-field">
+        <label for="post-content">내용</label>
+        <textarea id="post-content" style="min-height:220px;" placeholder="입시 뉴스 내용을 작성하세요." required></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost modal-close" onclick="closeModal('post-modal')">취소</button>
+        <button type="submit" class="btn btn-primary" id="post-submit-btn">추가</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str || "";
+    return div.innerHTML;
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add("open"); }
+  function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+  function openPostModal() {
+    document.getElementById("post-form").reset();
+    document.getElementById("post-form-id").value = "";
+    document.getElementById("post-modal-title").textContent = "글 추가";
+    document.getElementById("post-submit-btn").textContent = "추가";
+    openModal("post-modal");
+  }
+
+  var postsData = [];
+
+  function formatDate(iso) {
+    var d = new Date(iso);
+    return d.getFullYear() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0");
+  }
+
+  async function loadPosts() {
+    var list = document.getElementById("post-list");
+    var empty = document.getElementById("post-empty");
+    if (!supabaseReady) return;
+    var { data, error } = await supabaseClient
+      .from("news_posts")
+      .select("*")
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: false });
+    postsData = data || [];
+    if (error || postsData.length === 0) {
+      empty.style.display = "block";
+      list.innerHTML = "";
+      return;
+    }
+    empty.style.display = "none";
+    list.innerHTML = postsData.map(function (p) {
+      return (
+        '<div class="post-card">' +
+        "<h3>" + escapeHtml(p.title) + "</h3>" +
+        '<div class="date">' + formatDate(p.created_at) + "</div>" +
+        '<div class="content">' + escapeHtml(p.content) + "</div>" +
+        '<div class="admin-only card-actions">' +
+        '<button onclick="editPost(\'' + p.id + '\')">수정</button>' +
+        '<button class="danger" onclick="deletePost(\'' + p.id + '\')">삭제</button>' +
+        "</div>" +
+        "</div>"
+      );
+    }).join("");
+    toggleAdminUI(window.isAdminState);
+  }
+
+  function editPost(id) {
+    var p = postsData.find(function (x) { return x.id === id; });
+    if (!p) return;
+    document.getElementById("post-form-id").value = p.id;
+    document.getElementById("post-title").value = p.title || "";
+    document.getElementById("post-content").value = p.content || "";
+    document.getElementById("post-modal-title").textContent = "글 수정";
+    document.getElementById("post-submit-btn").textContent = "저장";
+    openModal("post-modal");
+  }
+
+  async function deletePost(id) {
+    if (!confirm("정말 삭제하시겠어요?")) return;
+    var { error } = await supabaseClient.from("news_posts").delete().eq("id", id);
+    if (error) { alert("삭제 실패: " + error.message); return; }
+    loadPosts();
+  }
+
+  document.getElementById("post-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (!supabaseReady) { alert("Supabase가 연결되지 않았습니다."); return; }
+    var id = document.getElementById("post-form-id").value;
+    var payload = {
+      title: document.getElementById("post-title").value.trim(),
+      content: document.getElementById("post-content").value.trim()
+    };
+    var query = id
+      ? supabaseClient.from("news_posts").update(payload).eq("id", id)
+      : supabaseClient.from("news_posts").insert(payload);
+    var { error } = await query;
+    if (error) { alert("저장 실패: " + error.message); return; }
+    closeModal("post-modal");
+    loadPosts();
+  });
+
+  loadPosts();
+</script>
 
 </body>
 </html>
