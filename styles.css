@@ -840,6 +840,68 @@ section{padding:var(--space-2xl) 0;}
 .student-card h4{font-size:1rem;font-weight:800;margin-bottom:6px;}
 .student-card .school{font-size:0.85rem;color:var(--color-muted-fg);margin-bottom:10px;}
 
+/* ---------- Progress meters (GPA/SAT/AP vs. tier benchmark) ---------- */
+.meter-block{margin-bottom:var(--space-lg);}
+.meter-block.overall{
+  background:var(--color-bg);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-md);
+  padding:var(--space-md) var(--space-lg);
+}
+.meter-block.overall .meter-title{font-size:1rem;}
+.meter-block.overall .meter-value strong{font-size:1.6rem;}
+.meter-block.overall .meter-track{height:26px;}
+.meter-labels-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;}
+.meter-title{font-weight:800;font-size:0.92rem;color:var(--color-fg);}
+.meter-value{font-size:0.85rem;color:var(--color-muted-fg);}
+.meter-value strong{color:var(--color-fg);font-size:0.98rem;}
+.meter-annotate{position:relative;height:34px;}
+.meter-target-tag{
+  position:absolute;
+  top:0;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  font-size:0.72rem;
+  font-weight:700;
+  color:var(--color-fg);
+}
+.meter-target-bracket{
+  position:absolute;
+  top:20px;
+  height:6px;
+  border-left:2px solid var(--color-fg);
+  border-right:2px solid var(--color-fg);
+  border-top:2px solid var(--color-fg);
+  border-radius:2px 2px 0 0;
+  transform:translateX(-1px);
+}
+.meter-target-bracket.point{border-right:none;border-radius:0;}
+.meter-track{
+  position:relative;
+  height:20px;
+  background:var(--color-border);
+  border-radius:999px;
+  overflow:hidden;
+}
+.meter-fill{
+  position:absolute;
+  left:0;top:0;height:100%;
+  background:var(--color-accent);
+  border-radius:999px;
+  transition:width 300ms var(--ease);
+}
+.meter-gap-note{font-size:0.85rem;color:var(--color-muted-fg);margin-top:6px;}
+.meter-gap-note.met{color:#16A34A;font-weight:700;}
+.benchmark-table{width:100%;border-collapse:collapse;margin-top:var(--space-md);}
+.benchmark-table th, .benchmark-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--color-border);font-size:0.85rem;}
+.benchmark-table tr.is-target{background:rgba(47,111,237,0.08);}
+.benchmark-table tr.is-target td:first-child{font-weight:800;color:var(--color-accent);}
+.benchmark-table input{
+  width:76px;padding:6px 8px;border:1.5px solid var(--color-border);border-radius:8px;font-size:0.85rem;
+  font-family:var(--font-body);
+}
+.benchmark-table input:focus{outline:none;border-color:var(--color-accent);box-shadow:0 0 0 3px rgba(47,111,237,0.15);}
+
 /* ---------- Booking form ---------- */
 .booking-form{
   background:var(--color-card);
@@ -965,7 +1027,9 @@ footer{background:var(--color-fg);color:#B9C4D9;padding:var(--space-xl) 0 var(--
   .services-grid, .process-grid, .value-grid{grid-template-columns:repeat(2, 1fr);}
   .hero .container{gap:var(--space-lg);}
 }
-@media (max-width:768px){
+/* Nav switches to the hamburger well before general content reflows — the desktop
+   nav (logo + 7 links + CTA) runs out of room around ~1200px, long before 768px. */
+@media (max-width:1200px){
   .site-header .container{flex-wrap:wrap;row-gap:8px;}
   .logo-mark{height:64px;}
   .nav-toggle{display:inline-flex;order:2;}
@@ -984,6 +1048,8 @@ footer{background:var(--color-fg);color:#B9C4D9;padding:var(--space-xl) 0 var(--
   .nav-links.open{display:flex;}
   .nav-links a{width:100%;padding:12px 4px;}
   .nav-links a::after{display:none;}
+}
+@media (max-width:768px){
   .hero .container{grid-template-columns:1fr;text-align:center;}
   .hero-copy{order:2;}
   .hero-visual{order:1;min-height:340px;}

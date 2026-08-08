@@ -154,6 +154,27 @@
         </div>
 
         <div class="dashboard-section">
+          <h3>목표 대학 티어</h3>
+          <div class="inline-form">
+            <div class="form-field">
+              <label for="target-tier-select">목표</label>
+              <select id="target-tier-select">
+                <option value="">선택 안 함</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="target-tier-save-btn">저장</button>
+          </div>
+          <div id="progress-meters"></div>
+          <p class="empty-state" id="progress-empty">목표 티어를 선택하면 현재 성적과의 격차를 그래프로 볼 수 있어요.</p>
+          <div class="gpa-table-wrap" id="benchmark-table-wrap">
+            <table class="benchmark-table" id="benchmark-table">
+              <thead><tr><th>티어</th><th>평균 GPA</th><th>SAT 25~75%</th><th>AP 4점+ 권장</th></tr></thead>
+              <tbody id="benchmark-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="dashboard-section">
           <h3>GPA</h3>
           <div class="gpa-table-wrap">
             <table class="gpa-table">
@@ -230,6 +251,17 @@
         </div>
         <div class="student-grid" id="student-grid"></div>
         <p class="empty-state" id="student-empty" style="display:none;">등록된 학생이 아직 없습니다.</p>
+
+        <div class="dashboard-section" style="margin-top:var(--space-xl);">
+          <h3>기준값 관리 (티어별 GPA/SAT/AP 벤치마크)</h3>
+          <div class="gpa-table-wrap">
+            <table class="benchmark-table" id="admin-benchmark-table">
+              <thead><tr><th>티어</th><th>평균 GPA</th><th>SAT 하한</th><th>SAT 상한</th><th>AP 4점+ 하한</th><th>AP 4점+ 상한</th></tr></thead>
+              <tbody id="admin-benchmark-tbody"></tbody>
+            </table>
+          </div>
+          <button class="btn btn-primary" id="benchmark-save-btn" style="margin-top:var(--space-md);">기준값 저장</button>
+        </div>
       </div>
 
     </div>
@@ -305,6 +337,9 @@
   ];
 
   var GPA_ROWS = [9, 10, 11, 12].reduce(function (acc, g) { acc.push([g, 1], [g, 2]); return acc; }, []);
+  var GPA_SCALE = [2.0, 4.3];
+  var SAT_SCALE = [1000, 1600];
+  var AP_SCALE = [0, 14];
 
   document.getElementById("ap-subject-select").innerHTML =
     AP_SUBJECTS.map(function (s) { return '<option value="' + s + '">' + s + '</option>'; }).join("");
@@ -349,8 +384,133 @@
   });
 
   var currentStudentId = null;
+  var currentStudentRow = null;
   var apData = [];
   var ecData = [];
+  var benchmarksData = [];
+
+  async function loadBenchmarks() {
+    var { data } = await supabaseClient.from("benchmarks").select("*").order("tier_order");
+    benchmarksData = data || [];
+  }
+
+  function populateTargetTierSelect(selected) {
+    var sel = document.getElementById("target-tier-select");
+    sel.innerHTML = '<option value="">선택 안 함</option>' +
+      benchmarksData.map(function (b) {
+        return '<option value="' + b.tier + '"' + (b.tier === selected ? " selected" : "") + '>' + b.tier_label + '</option>';
+      }).join("");
+  }
+
+  function renderBenchmarkTable(containerId, targetTier) {
+    document.getElementById(containerId).innerHTML = benchmarksData.map(function (b) {
+      return "<tr" + (b.tier === targetTier ? ' class="is-target"' : "") + "><td>" + escapeHtml(b.tier_label) + "</td><td>" +
+        Number(b.avg_gpa).toFixed(2) + "</td><td>" + b.sat_low + "~" + b.sat_high + "</td><td>" + b.ap4_low + "~" + b.ap4_high + "</td></tr>";
+    }).join("");
+  }
+
+  function meterScale(prefMin, prefMax, values) {
+    var lo = Math.min(prefMin, Math.min.apply(null, values));
+    var hi = Math.max(prefMax, Math.max.apply(null, values));
+    var range = (hi - lo) || 1;
+    var pad = range * 0.04;
+    return { min: lo - pad, max: hi + pad };
+  }
+  function meterPct(v, min, max) {
+    return Math.max(0, Math.min(100, ((v - min) / (max - min)) * 100));
+  }
+
+  function renderMeter(containerId, opts) {
+    var decimals = opts.decimals || 0;
+    var isPoint = (opts.targetHigh == null || opts.targetHigh === opts.targetLow);
+    var targetHigh = isPoint ? opts.targetLow : opts.targetHigh;
+    var scale = meterScale(opts.scaleMin, opts.scaleMax, [opts.currentValue, opts.targetLow, targetHigh]);
+    var fillPct = meterPct(opts.currentValue, scale.min, scale.max);
+    var lowPct = meterPct(opts.targetLow, scale.min, scale.max);
+    var highPct = meterPct(targetHigh, scale.min, scale.max);
+    var midPct = (lowPct + highPct) / 2;
+    var unit = opts.unit || "";
+    var fmt = function (n) { return n.toFixed(decimals) + unit; };
+
+    var targetText = isPoint ? ("목표 " + fmt(opts.targetLow)) : ("목표 " + fmt(opts.targetLow) + "~" + fmt(opts.targetHigh));
+    var met = opts.currentValue >= opts.targetLow;
+    var gapHtml = met
+      ? '<p class="meter-gap-note met">목표 기준 충족했어요</p>'
+      : '<p class="meter-gap-note">목표까지 ' + fmt(opts.targetLow - opts.currentValue) + ' 더 필요해요</p>';
+
+    document.getElementById(containerId).innerHTML =
+      '<div class="meter-block">' +
+      '<div class="meter-labels-row"><span class="meter-title">' + opts.title + '</span>' +
+      '<span class="meter-value">현재 <strong>' + fmt(opts.currentValue) + '</strong></span></div>' +
+      '<div class="meter-annotate">' +
+      '<span class="meter-target-tag" style="left:' + midPct.toFixed(2) + '%;">' + targetText + '</span>' +
+      '<div class="meter-target-bracket' + (isPoint ? ' point' : '') + '" style="left:' + lowPct.toFixed(2) + '%; width:' + (isPoint ? 0 : (highPct - lowPct).toFixed(2)) + '%;"></div>' +
+      '</div>' +
+      '<div class="meter-track"><div class="meter-fill" style="width:' + fillPct.toFixed(2) + '%;"></div></div>' +
+      gapHtml +
+      '</div>';
+  }
+
+  function renderOverallMeter(containerId, breakdown) {
+    // GPA weighted highest, and the weakest single metric is blended in at 40%
+    // so one strong area can't fully mask another that's far behind (conservative by design).
+    var weighted = breakdown.gpaPct * 0.5 + breakdown.satPct * 0.3 + breakdown.apPct * 0.2;
+    var weakest = Math.min(breakdown.gpaPct, breakdown.satPct, breakdown.apPct);
+    var overallPct = weighted * 0.6 + weakest * 0.4;
+    document.getElementById(containerId).innerHTML =
+      '<div class="meter-block overall">' +
+      '<div class="meter-labels-row"><span class="meter-title">종합 목표 달성률</span>' +
+      '<span class="meter-value"><strong>' + overallPct.toFixed(0) + '%</strong></span></div>' +
+      '<div class="meter-track"><div class="meter-fill" style="width:' + Math.min(100, overallPct).toFixed(2) + '%;"></div></div>' +
+      '<p class="meter-gap-note">GPA ' + breakdown.gpaPct.toFixed(0) + '% · SAT ' + breakdown.satPct.toFixed(0) + '% · AP ' + breakdown.apPct.toFixed(0) + '%</p>' +
+      '</div>';
+  }
+
+  function computeBreakdownPct(gpaAvg, satVal, ap4Count, benchmark) {
+    return {
+      gpaPct: Math.min(100, (gpaAvg / Number(benchmark.avg_gpa)) * 100),
+      satPct: Math.min(100, (satVal / benchmark.sat_low) * 100),
+      apPct: Math.min(100, (ap4Count / benchmark.ap4_low) * 100)
+    };
+  }
+
+  async function computeProgressStats(studentId) {
+    var [gpaRes, apRes] = await Promise.all([
+      supabaseClient.from("gpa_records").select("gpa").eq("student_id", studentId),
+      supabaseClient.from("ap_scores").select("score").eq("student_id", studentId)
+    ]);
+    var gpas = gpaRes.data || [];
+    var gpaAvg = gpas.length ? (gpas.reduce(function (s, r) { return s + Number(r.gpa); }, 0) / gpas.length) : 0;
+    var ap4Count = (apRes.data || []).filter(function (a) { return a.score >= 4; }).length;
+    return { gpaAvg: gpaAvg, ap4Count: ap4Count };
+  }
+
+  async function renderStudentProgress(student) {
+    var container = document.getElementById("progress-meters");
+    var empty = document.getElementById("progress-empty");
+    var tableWrap = document.getElementById("benchmark-table-wrap");
+
+    if (!student.target_tier) {
+      container.innerHTML = "";
+      empty.style.display = "block";
+      tableWrap.style.display = "none";
+      return;
+    }
+    var benchmark = benchmarksData.find(function (b) { return b.tier === student.target_tier; });
+    if (!benchmark) return;
+
+    empty.style.display = "none";
+    tableWrap.style.display = "";
+
+    var stats = await computeProgressStats(student.id);
+    var satVal = student.sat_score || 0;
+    container.innerHTML = '<div id="meter-overall"></div><div id="meter-gpa"></div><div id="meter-sat"></div><div id="meter-ap"></div>';
+    renderOverallMeter("meter-overall", computeBreakdownPct(stats.gpaAvg, satVal, stats.ap4Count, benchmark));
+    renderMeter("meter-gpa", { title: "GPA", currentValue: stats.gpaAvg, targetLow: Number(benchmark.avg_gpa), decimals: 2, scaleMin: GPA_SCALE[0], scaleMax: GPA_SCALE[1] });
+    renderMeter("meter-sat", { title: "SAT", currentValue: satVal, targetLow: benchmark.sat_low, targetHigh: benchmark.sat_high, decimals: 0, scaleMin: SAT_SCALE[0], scaleMax: SAT_SCALE[1] });
+    renderMeter("meter-ap", { title: "AP (4점 이상 개수)", currentValue: stats.ap4Count, targetLow: benchmark.ap4_low, targetHigh: benchmark.ap4_high, decimals: 0, scaleMin: AP_SCALE[0], scaleMax: AP_SCALE[1] });
+    renderBenchmarkTable("benchmark-tbody", student.target_tier);
+  }
 
   function showAuthSection() {
     document.getElementById("auth-section").style.display = "";
@@ -358,11 +518,12 @@
     document.getElementById("admin-dashboard").style.display = "none";
   }
 
-  function showStudentDashboard(student) {
+  async function showStudentDashboard(student) {
     document.getElementById("auth-section").style.display = "none";
     document.getElementById("admin-dashboard").style.display = "none";
     document.getElementById("student-dashboard").style.display = "";
     currentStudentId = student.id;
+    currentStudentRow = student;
     document.getElementById("student-name-display").textContent = student.name;
     document.getElementById("student-school-display").textContent = student.school;
     document.getElementById("student-grade-display").textContent =
@@ -371,18 +532,23 @@
     loadGpaRecords();
     loadApScores();
     loadEcRecords();
+    if (benchmarksData.length === 0) await loadBenchmarks();
+    populateTargetTierSelect(student.target_tier);
+    renderStudentProgress(student);
   }
 
-  function showAdminDashboard() {
+  async function showAdminDashboard() {
     document.getElementById("auth-section").style.display = "none";
     document.getElementById("student-dashboard").style.display = "none";
     document.getElementById("admin-dashboard").style.display = "";
+    if (benchmarksData.length === 0) await loadBenchmarks();
     loadAllStudents();
+    renderAdminBenchmarkTable();
   }
 
   async function routeAfterLogin(user) {
     var { data: adminRow } = await supabaseClient.from("admins").select("id").eq("id", user.id).maybeSingle();
-    if (adminRow) { showAdminDashboard(); return "admin"; }
+    if (adminRow) { await showAdminDashboard(); return "admin"; }
 
     var { data: studentRow } = await supabaseClient.from("students").select("*").eq("id", user.id).maybeSingle();
     if (!studentRow) {
@@ -400,7 +566,7 @@
         studentRow = retry.data;
       }
     }
-    if (studentRow) { showStudentDashboard(studentRow); return "student"; }
+    if (studentRow) { await showStudentDashboard(studentRow); return "student"; }
     return null;
   }
 
@@ -509,16 +675,28 @@
     var { error } = await supabaseClient.from("gpa_records").upsert(upserts, { onConflict: "student_id,grade,semester" });
     if (error) { alert("저장 실패: " + error.message); return; }
     alert("GPA가 저장되었습니다.");
+    if (currentStudentRow) renderStudentProgress(currentStudentRow);
+  });
+
+  // ---- Target tier ----
+  document.getElementById("target-tier-save-btn").addEventListener("click", async function () {
+    var tier = document.getElementById("target-tier-select").value || null;
+    var { error } = await supabaseClient.from("students").update({ target_tier: tier }).eq("id", currentStudentId);
+    if (error) { alert("저장 실패: " + error.message); return; }
+    if (currentStudentRow) currentStudentRow.target_tier = tier;
+    renderStudentProgress(currentStudentRow);
   });
 
   // ---- SAT ----
   document.getElementById("sat-save-btn").addEventListener("click", async function () {
     var v = document.getElementById("sat-input").value.trim();
+    var satVal = v ? parseInt(v, 10) : null;
     var { error } = await supabaseClient.from("students")
-      .update({ sat_score: v ? parseInt(v, 10) : null })
+      .update({ sat_score: satVal })
       .eq("id", currentStudentId);
     if (error) { alert("저장 실패: " + error.message); return; }
     alert("SAT 점수가 저장되었습니다.");
+    if (currentStudentRow) { currentStudentRow.sat_score = satVal; renderStudentProgress(currentStudentRow); }
   });
 
   // ---- AP ----
@@ -544,11 +722,13 @@
     if (error) { alert("저장 실패: " + error.message); return; }
     document.getElementById("ap-score-select").value = "";
     loadApScores();
+    if (currentStudentRow) renderStudentProgress(currentStudentRow);
   });
   async function deleteAp(id) {
     if (!confirm("삭제하시겠어요?")) return;
     await supabaseClient.from("ap_scores").delete().eq("id", id);
     loadApScores();
+    if (currentStudentRow) renderStudentProgress(currentStudentRow);
   }
 
   // ---- EC ----
@@ -634,15 +814,70 @@
       ? ecs.map(function (e) { return '<div class="entry-item"><div class="entry-main"><span class="tag">' + escapeHtml(e.category) + "</span>" + escapeHtml(e.title) + (e.description ? " — " + escapeHtml(e.description) : "") + "</div></div>"; }).join("")
       : '<p class="empty-state">등록된 EC 활동이 없습니다.</p>';
 
+    var targetBenchmark = student.target_tier ? benchmarksData.find(function (b) { return b.tier === student.target_tier; }) : null;
+    var progressHtml = targetBenchmark
+      ? '<div class="dashboard-section"><h3>목표: ' + escapeHtml(targetBenchmark.tier_label) + '</h3>' +
+        '<div id="detail-meter-overall"></div><div id="detail-meter-gpa"></div><div id="detail-meter-sat"></div><div id="detail-meter-ap"></div></div>'
+      : '<div class="dashboard-section"><h3>목표 티어</h3><p class="empty-state">학생이 아직 목표 티어를 선택하지 않았습니다.</p></div>';
+
     document.getElementById("student-detail-body").innerHTML =
       "<h3 style=\"margin-bottom:4px;\">" + escapeHtml(student.name) + "</h3>" +
       "<p style=\"color:var(--color-muted-fg);margin-bottom:var(--space-md);\">" + escapeHtml(student.school) + " · " + grade + "학년</p>" +
+      progressHtml +
       '<div class="dashboard-section"><h3>GPA</h3><div class="gpa-table-wrap"><table class="gpa-table"><tbody>' + gpaRows + "</tbody></table></div></div>" +
       '<div class="dashboard-section"><h3>SAT</h3><p>' + (student.sat_score || "미입력") + "</p></div>" +
       '<div class="dashboard-section"><h3>AP</h3><div class="entry-list">' + apHtml + "</div></div>" +
       '<div class="dashboard-section"><h3>EC</h3><div class="entry-list">' + ecHtml + "</div></div>";
+
+    if (targetBenchmark) {
+      var apScores = aps.map(function (a) { return a.score; });
+      var ap4CountDetail = apScores.filter(function (s) { return s >= 4; }).length;
+      var gpaAvgDetail = gpaAvgFromRows(gpaRes.data);
+      var satValDetail = student.sat_score || 0;
+      renderOverallMeter("detail-meter-overall", computeBreakdownPct(gpaAvgDetail, satValDetail, ap4CountDetail, targetBenchmark));
+      renderMeter("detail-meter-gpa", { title: "GPA", currentValue: gpaAvgDetail, targetLow: Number(targetBenchmark.avg_gpa), decimals: 2, scaleMin: GPA_SCALE[0], scaleMax: GPA_SCALE[1] });
+      renderMeter("detail-meter-sat", { title: "SAT", currentValue: satValDetail, targetLow: targetBenchmark.sat_low, targetHigh: targetBenchmark.sat_high, decimals: 0, scaleMin: SAT_SCALE[0], scaleMax: SAT_SCALE[1] });
+      renderMeter("detail-meter-ap", { title: "AP (4점 이상 개수)", currentValue: ap4CountDetail, targetLow: targetBenchmark.ap4_low, targetHigh: targetBenchmark.ap4_high, decimals: 0, scaleMin: AP_SCALE[0], scaleMax: AP_SCALE[1] });
+    }
     openModal("student-detail-modal");
   }
+
+  function gpaAvgFromRows(rows) {
+    rows = rows || [];
+    if (rows.length === 0) return 0;
+    return rows.reduce(function (s, r) { return s + Number(r.gpa); }, 0) / rows.length;
+  }
+
+  function renderAdminBenchmarkTable() {
+    document.getElementById("admin-benchmark-tbody").innerHTML = benchmarksData.map(function (b) {
+      return "<tr>" +
+        "<td>" + escapeHtml(b.tier_label) + "</td>" +
+        "<td><input type=\"number\" step=\"0.01\" min=\"0\" max=\"5\" data-tier=\"" + b.tier + "\" data-field=\"avg_gpa\" value=\"" + b.avg_gpa + "\"></td>" +
+        "<td><input type=\"number\" data-tier=\"" + b.tier + "\" data-field=\"sat_low\" value=\"" + b.sat_low + "\"></td>" +
+        "<td><input type=\"number\" data-tier=\"" + b.tier + "\" data-field=\"sat_high\" value=\"" + b.sat_high + "\"></td>" +
+        "<td><input type=\"number\" data-tier=\"" + b.tier + "\" data-field=\"ap4_low\" value=\"" + b.ap4_low + "\"></td>" +
+        "<td><input type=\"number\" data-tier=\"" + b.tier + "\" data-field=\"ap4_high\" value=\"" + b.ap4_high + "\"></td>" +
+        "</tr>";
+    }).join("");
+  }
+
+  document.getElementById("benchmark-save-btn").addEventListener("click", async function () {
+    var rows = {};
+    document.querySelectorAll("#admin-benchmark-tbody input").forEach(function (inp) {
+      var tier = inp.dataset.tier;
+      rows[tier] = rows[tier] || { tier: tier };
+      rows[tier][inp.dataset.field] = inp.dataset.field === "avg_gpa" ? parseFloat(inp.value) : parseInt(inp.value, 10);
+    });
+    var updates = Object.keys(rows).map(function (tier) {
+      return supabaseClient.from("benchmarks").update(rows[tier]).eq("tier", tier);
+    });
+    var results = await Promise.all(updates);
+    var failed = results.find(function (r) { return r.error; });
+    if (failed) { alert("저장 실패: " + failed.error.message); return; }
+    await loadBenchmarks();
+    renderAdminBenchmarkTable();
+    alert("기준값이 저장되었습니다.");
+  });
 
   document.getElementById("student-delete-btn").addEventListener("click", async function () {
     if (!currentDetailStudentId) return;

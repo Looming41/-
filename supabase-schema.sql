@@ -58,7 +58,36 @@ create table if not exists admins (
   created_at timestamptz default now()
 );
 
--- 6. Students (터미널 회원가입)
+-- 6. Admission tier benchmarks (터미널 게이지 그래프 기준값 - 관리자 수정 가능)
+create table if not exists benchmarks (
+  tier text primary key,
+  tier_label text not null,
+  tier_order int not null,
+  avg_gpa numeric(3,2) not null,
+  sat_low int not null,
+  sat_high int not null,
+  ap4_low int not null,
+  ap4_high int not null,
+  updated_at timestamptz default now()
+);
+
+insert into benchmarks (tier, tier_label, tier_order, avg_gpa, sat_low, sat_high, ap4_low, ap4_high) values
+  ('top1_5',   'Top 1-5',   1, 3.94, 1520, 1580, 8, 12),
+  ('top5_10',  'Top 5-10',  2, 3.93, 1520, 1580, 8, 12),
+  ('top10_15', 'Top 10-15', 3, 3.92, 1510, 1570, 7, 12),
+  ('top15_20', 'Top 15-20', 4, 3.91, 1490, 1560, 7, 11),
+  ('top20_30', 'Top 20-30', 5, 3.86, 1440, 1550, 6, 10),
+  ('top30_50', 'Top 30-50', 6, 3.81, 1420, 1535, 5, 8)
+on conflict (tier) do update set
+  tier_label = excluded.tier_label,
+  tier_order = excluded.tier_order,
+  avg_gpa = excluded.avg_gpa,
+  sat_low = excluded.sat_low,
+  sat_high = excluded.sat_high,
+  ap4_low = excluded.ap4_low,
+  ap4_high = excluded.ap4_high;
+
+-- 7. Students (터미널 회원가입)
 create table if not exists students (
   id uuid primary key references auth.users(id) on delete cascade,
   name text not null,
@@ -66,10 +95,12 @@ create table if not exists students (
   grade_at_signup int not null,
   signup_school_year int not null,
   sat_score int,
+  target_tier text references benchmarks(tier),
   created_at timestamptz default now()
 );
+alter table students add column if not exists target_tier text references benchmarks(tier);
 
--- 7. GPA records (학년/학기별)
+-- 8. GPA records (학년/학기별)
 create table if not exists gpa_records (
   id uuid primary key default gen_random_uuid(),
   student_id uuid not null references students(id) on delete cascade,
@@ -80,7 +111,7 @@ create table if not exists gpa_records (
   unique (student_id, grade, semester)
 );
 
--- 8. AP scores (과목별)
+-- 9. AP scores (과목별)
 create table if not exists ap_scores (
   id uuid primary key default gen_random_uuid(),
   student_id uuid not null references students(id) on delete cascade,
@@ -90,7 +121,7 @@ create table if not exists ap_scores (
   unique (student_id, subject)
 );
 
--- 9. EC records (학생이 직접 기입하는 활동)
+-- 10. EC records (학생이 직접 기입하는 활동)
 create table if not exists ec_records (
   id uuid primary key default gen_random_uuid(),
   student_id uuid not null references students(id) on delete cascade,
@@ -106,6 +137,7 @@ alter table admission_results enable row level security;
 alter table ec_achievements enable row level security;
 alter table news_posts enable row level security;
 alter table admins enable row level security;
+alter table benchmarks enable row level security;
 alter table students enable row level security;
 alter table gpa_records enable row level security;
 alter table ap_scores enable row level security;
@@ -150,6 +182,15 @@ create policy "admin write news_posts" on news_posts for all
 -- Admins table: a user may only check their own membership row
 drop policy if exists "self read admins" on admins;
 create policy "self read admins" on admins for select using (auth.uid() = id);
+
+-- Benchmarks: everyone can read (used in student gauge charts), only admins can edit
+drop policy if exists "public read benchmarks" on benchmarks;
+create policy "public read benchmarks" on benchmarks for select using (true);
+
+drop policy if exists "admin write benchmarks" on benchmarks;
+create policy "admin write benchmarks" on benchmarks for all
+  using (exists (select 1 from admins where id = auth.uid()))
+  with check (exists (select 1 from admins where id = auth.uid()));
 
 -- Students: a student manages only their own profile; admins can read everyone's
 drop policy if exists "student read own profile" on students;
