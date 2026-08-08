@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>터미널 | 유앤UP 국제컨설팅</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="유앤UP 국제컨설팅 학생 터미널 — GPA, SAT, AP, EC 활동을 기록하고 관리하세요.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="admin-bar" id="admin-bar" style="display:none;">
+  <span id="admin-bar-text">관리자 모드입니다.</span>
+  <button onclick="adminLogout()">로그아웃</button>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo"><img src="assets/logo-crest.png" alt="" class="logo-mark">유앤UP국제컨설팅</a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="terminal.html" aria-current="page">터미널</a>
+      <a href="philosophy.html">우리의 방향성</a>
+      <a href="ec.html">EC</a>
+      <a href="top10.html">미국 극상위입시<span class="rank">(1-10위)</span></a>
+      <a href="top20.html">미국상위입시<span class="rank">(10-20위)</span></a>
+      <a href="g1-g8.html">G1-G8 입시프렙</a>
+      <a href="news.html">미국입시뉴스</a>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">
+      <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="display:none;"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="header-cta">
+      <a href="booking.html" class="btn btn-primary">상담예약</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        홈으로
+      </a>
+      <span class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.4 2.4 7.2L12 16.4 5.6 20.8 8 13.6 2 9.2h7.6z"/></svg>
+        터미널
+      </span>
+      <h1>내 성적과 활동을 <span class="highlight">한 곳에서</span> 관리하세요</h1>
+      <p class="hero-sub">GPA, SAT, AP, EC 활동을 기록하면 담당 컨설턴트가 확인하고 맞춤 전략을 세울 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+
+      <!-- Auth: login / signup -->
+      <div id="auth-section">
+        <div class="tabs" role="tablist">
+          <button class="tab-btn active" data-tab="student-login" role="tab">학생 로그인</button>
+          <button class="tab-btn" data-tab="signup" role="tab">회원가입</button>
+          <button class="tab-btn" data-tab="admin-login" role="tab">관리자 로그인</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-student-login">
+          <form class="booking-form" id="student-login-form" novalidate>
+            <div class="form-field">
+              <label for="sl-email">이메일</label>
+              <input type="email" id="sl-email" required autocomplete="username">
+            </div>
+            <div class="form-field">
+              <label for="sl-password">비밀번호</label>
+              <input type="password" id="sl-password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">로그인</button>
+            <p class="form-note" id="sl-error"></p>
+          </form>
+        </div>
+
+        <div class="tab-panel" id="tab-signup">
+          <form class="booking-form" id="signup-form" novalidate>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="su-name">이름</label>
+                <input type="text" id="su-name" required autocomplete="name">
+              </div>
+              <div class="form-field">
+                <label for="su-school">학교</label>
+                <input type="text" id="su-school" required>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="su-grade">현재 학년</label>
+              <select id="su-grade" required>
+                <option value="">선택하세요</option>
+                <option value="1">1학년</option>
+                <option value="2">2학년</option>
+                <option value="3">3학년</option>
+                <option value="4">4학년</option>
+                <option value="5">5학년</option>
+                <option value="6">6학년</option>
+                <option value="7">7학년</option>
+                <option value="8">8학년</option>
+                <option value="9">9학년</option>
+                <option value="10">10학년</option>
+                <option value="11">11학년</option>
+                <option value="12">12학년</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="su-email">이메일</label>
+                <input type="email" id="su-email" required autocomplete="username">
+              </div>
+              <div class="form-field">
+                <label for="su-password">비밀번호</label>
+                <input type="password" id="su-password" required minlength="6" autocomplete="new-password">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">회원가입</button>
+            <p class="form-note" id="su-error">학년은 매년 9월에 자동으로 1씩 올라갑니다.</p>
+          </form>
+        </div>
+
+        <div class="tab-panel" id="tab-admin-login">
+          <form class="booking-form" id="admin-login-form" novalidate>
+            <div class="form-field">
+              <label for="al-email">이메일</label>
+              <input type="email" id="al-email" required autocomplete="username">
+            </div>
+            <div class="form-field">
+              <label for="al-password">비밀번호</label>
+              <input type="password" id="al-password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">로그인</button>
+            <p class="form-note" id="al-error"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Student dashboard -->
+      <div id="student-dashboard" style="display:none;">
+        <div class="dashboard-header">
+          <div>
+            <h2 id="student-name-display"></h2>
+            <p><span id="student-school-display"></span> · <span class="grade-badge" id="student-grade-display"></span></p>
+          </div>
+          <button class="btn btn-ghost" onclick="terminalLogout()">로그아웃</button>
+        </div>
+
+        <div class="dashboard-section">
+          <h3>GPA</h3>
+          <div class="gpa-table-wrap">
+            <table class="gpa-table">
+              <thead><tr><th>학기</th><th>GPA</th></tr></thead>
+              <tbody id="gpa-tbody"></tbody>
+            </table>
+          </div>
+          <button class="btn btn-primary" id="gpa-save-btn" style="margin-top:var(--space-md);">GPA 저장</button>
+        </div>
+
+        <div class="dashboard-section">
+          <h3>SAT</h3>
+          <div class="inline-form">
+            <div class="form-field">
+              <label for="sat-input">SAT 점수</label>
+              <input type="number" id="sat-input" min="400" max="1600" placeholder="예: 1500">
+            </div>
+            <button class="btn btn-primary" id="sat-save-btn">저장</button>
+          </div>
+        </div>
+
+        <div class="dashboard-section">
+          <h3>AP</h3>
+          <div class="inline-form">
+            <div class="form-field">
+              <label for="ap-subject-select">AP 과목</label>
+              <select id="ap-subject-select"></select>
+            </div>
+            <div class="form-field" style="max-width:120px;">
+              <label for="ap-score-select">점수</label>
+              <select id="ap-score-select">
+                <option value="">-</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="ap-add-btn">추가</button>
+          </div>
+          <div class="entry-list" id="ap-list"></div>
+        </div>
+
+        <div class="dashboard-section">
+          <h3>EC (Extracurricular)</h3>
+          <div class="inline-form">
+            <div class="form-field">
+              <label for="ec-category-select">카테고리</label>
+              <select id="ec-category-select"></select>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="ec-title-input">활동명</label>
+            <input type="text" id="ec-title-input" placeholder="예: 교내 로봇 동아리 팀장">
+          </div>
+          <div class="form-field">
+            <label for="ec-desc-input">설명 <span class="optional">(선택)</span></label>
+            <textarea id="ec-desc-input" placeholder="활동 기간, 역할, 성과 등을 자유롭게 적어주세요."></textarea>
+          </div>
+          <button class="btn btn-primary" id="ec-add-btn">추가</button>
+          <div class="entry-list" id="ec-list" style="margin-top:var(--space-md);"></div>
+        </div>
+      </div>
+
+      <!-- Admin dashboard -->
+      <div id="admin-dashboard" style="display:none;">
+        <div class="dashboard-header">
+          <div>
+            <h2>학생 현황</h2>
+            <p>카드를 클릭하면 상세 정보를 볼 수 있습니다.</p>
+          </div>
+          <button class="btn btn-ghost" onclick="terminalLogout()">로그아웃</button>
+        </div>
+        <div class="student-grid" id="student-grid"></div>
+        <p class="empty-state" id="student-empty" style="display:none;">등록된 학생이 아직 없습니다.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo"><img src="assets/logo-crest.png" alt="" class="logo-mark">유앤UP국제컨설팅</a>
+        <p>미국 대학 입시 전략부터 합격까지, 유앤UP 국제컨설팅이 함께합니다.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>메뉴</h4>
+          <a href="terminal.html">터미널</a>
+          <a href="philosophy.html">우리의 방향성</a>
+          <a href="ec.html">EC</a>
+          <a href="top10.html">미국 극상위입시</a>
+          <a href="top20.html">미국상위입시</a>
+          <a href="g1-g8.html">G1-G8 입시프렙</a>
+          <a href="news.html">미국입시뉴스</a>
+        </div>
+        <div class="footer-col">
+          <h4>문의</h4>
+          <p>이메일 : hello@uandup-consulting.com</p>
+          <p>전화 : 02-1234-5678</p>
+          <p>평일 10:00 - 19:00</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 유앤UP 국제컨설팅. All rights reserved. · <a href="admin-login.html" style="text-decoration:underline;">관리자</a></div>
+  </div>
+</footer>
+
+<!-- Admin: student detail modal -->
+<div class="modal-overlay" id="student-detail-modal">
+  <div class="modal wide">
+    <div id="student-detail-body"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost modal-close" onclick="closeModal('student-detail-modal')">닫기</button>
+      <button type="button" class="btn btn-danger" id="student-delete-btn">학생 삭제</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase-client.js"></script>
+<script>
+  var AP_SUBJECTS = [
+    "AP Art History", "AP Art and Design: Drawing", "AP Art and Design: 2-D Art and Design", "AP Art and Design: 3-D Art and Design",
+    "AP Biology", "AP Calculus AB", "AP Calculus BC", "AP Chemistry", "AP Chinese Language and Culture",
+    "AP Comparative Government and Politics", "AP Computer Science A", "AP Computer Science Principles",
+    "AP English Language and Composition", "AP English Literature and Composition", "AP Environmental Science",
+    "AP European History", "AP French Language and Culture", "AP German Language and Culture", "AP Human Geography",
+    "AP Italian Language and Culture", "AP Japanese Language and Culture", "AP Latin", "AP Macroeconomics",
+    "AP Microeconomics", "AP Music Theory", "AP Physics 1: Algebra-Based", "AP Physics 2: Algebra-Based",
+    "AP Physics C: Electricity and Magnetism", "AP Physics C: Mechanics", "AP Psychology", "AP Research", "AP Seminar",
+    "AP Spanish Language and Culture", "AP Spanish Literature and Culture", "AP Statistics",
+    "AP U.S. Government and Politics", "AP U.S. History", "AP World History: Modern"
+  ];
+
+  var EC_CATEGORIES = [
+    "Academic", "Art", "Athletics: Club", "Athletics: JV/Varsity",
+    "Career-Oriented", "Community Service", "Computer/Tech", "Cultural",
+    "Dance", "Debate/Speech", "Environmental", "Family Responsibilities",
+    "Foreign Exchange", "Journalism/Publication", "Junior R.O.T.C.", "Music: Instrumental",
+    "Music: Vocal", "Religious", "Research", "Robotics",
+    "School Spirit", "Science/Math", "Student Gov/Politics", "Theater/Drama",
+    "Work (paid)", "Other Club/Activity"
+  ];
+
+  var GPA_ROWS = [9, 10, 11, 12].reduce(function (acc, g) { acc.push([g, 1], [g, 2]); return acc; }, []);
+
+  document.getElementById("ap-subject-select").innerHTML =
+    AP_SUBJECTS.map(function (s) { return '<option value="' + s + '">' + s + '</option>'; }).join("");
+  document.getElementById("ec-category-select").innerHTML =
+    EC_CATEGORIES.map(function (c) { return '<option value="' + c + '">' + c + '</option>'; }).join("");
+
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str || "";
+    return div.innerHTML;
+  }
+  function openModal(id) { document.getElementById(id).classList.add("open"); }
+  function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+  function getCurrentSchoolYear(d) {
+    d = d || new Date();
+    var y = d.getFullYear();
+    var m = d.getMonth() + 1;
+    return m >= 9 ? y : y - 1;
+  }
+  function computeGrade(gradeAtSignup, signupSchoolYear) {
+    return gradeAtSignup + (getCurrentSchoolYear() - signupSchoolYear);
+  }
+
+  function savePendingProfile(p) { localStorage.setItem("pendingStudentProfile", JSON.stringify(p)); }
+  function getPendingProfile(email) {
+    try {
+      var p = JSON.parse(localStorage.getItem("pendingStudentProfile") || "null");
+      return (p && p.email === email) ? p : null;
+    } catch (e) { return null; }
+  }
+  function clearPendingProfile() { localStorage.removeItem("pendingStudentProfile"); }
+
+  // Tabs
+  document.querySelectorAll(".tab-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+      document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
+      btn.classList.add("active");
+      document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+    });
+  });
+
+  var currentStudentId = null;
+  var apData = [];
+  var ecData = [];
+
+  function showAuthSection() {
+    document.getElementById("auth-section").style.display = "";
+    document.getElementById("student-dashboard").style.display = "none";
+    document.getElementById("admin-dashboard").style.display = "none";
+  }
+
+  function showStudentDashboard(student) {
+    document.getElementById("auth-section").style.display = "none";
+    document.getElementById("admin-dashboard").style.display = "none";
+    document.getElementById("student-dashboard").style.display = "";
+    currentStudentId = student.id;
+    document.getElementById("student-name-display").textContent = student.name;
+    document.getElementById("student-school-display").textContent = student.school;
+    document.getElementById("student-grade-display").textContent =
+      computeGrade(student.grade_at_signup, student.signup_school_year) + "학년";
+    document.getElementById("sat-input").value = student.sat_score || "";
+    loadGpaRecords();
+    loadApScores();
+    loadEcRecords();
+  }
+
+  function showAdminDashboard() {
+    document.getElementById("auth-section").style.display = "none";
+    document.getElementById("student-dashboard").style.display = "none";
+    document.getElementById("admin-dashboard").style.display = "";
+    loadAllStudents();
+  }
+
+  async function routeAfterLogin(user) {
+    var { data: adminRow } = await supabaseClient.from("admins").select("id").eq("id", user.id).maybeSingle();
+    if (adminRow) { showAdminDashboard(); return "admin"; }
+
+    var { data: studentRow } = await supabaseClient.from("students").select("*").eq("id", user.id).maybeSingle();
+    if (!studentRow) {
+      var pending = getPendingProfile(user.email);
+      if (pending) {
+        await supabaseClient.from("students").insert({
+          id: user.id,
+          name: pending.name,
+          school: pending.school,
+          grade_at_signup: pending.grade,
+          signup_school_year: pending.signupSchoolYear
+        });
+        clearPendingProfile();
+        var retry = await supabaseClient.from("students").select("*").eq("id", user.id).maybeSingle();
+        studentRow = retry.data;
+      }
+    }
+    if (studentRow) { showStudentDashboard(studentRow); return "student"; }
+    return null;
+  }
+
+  async function init() {
+    if (!supabaseReady) return;
+    var { data } = await supabaseClient.auth.getSession();
+    if (data && data.session) {
+      var role = await routeAfterLogin(data.session.user);
+      if (!role) showAuthSection();
+    } else {
+      showAuthSection();
+    }
+  }
+
+  async function terminalLogout() {
+    await supabaseClient.auth.signOut();
+    window.location.reload();
+  }
+
+  // ---- Student login ----
+  document.getElementById("student-login-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var errEl = document.getElementById("sl-error");
+    errEl.textContent = "";
+    if (!supabaseReady) { errEl.textContent = "연결 오류가 발생했습니다."; return; }
+    var email = document.getElementById("sl-email").value.trim();
+    var password = document.getElementById("sl-password").value;
+    var { data, error } = await supabaseClient.auth.signInWithPassword({ email: email, password: password });
+    if (error) { errEl.textContent = "로그인 실패: " + error.message; return; }
+    var role = await routeAfterLogin(data.user);
+    if (!role) {
+      errEl.textContent = "학생 정보를 찾을 수 없습니다. 회원가입을 먼저 진행해주세요.";
+      await supabaseClient.auth.signOut();
+    }
+  });
+
+  // ---- Admin login ----
+  document.getElementById("admin-login-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var errEl = document.getElementById("al-error");
+    errEl.textContent = "";
+    if (!supabaseReady) { errEl.textContent = "연결 오류가 발생했습니다."; return; }
+    var email = document.getElementById("al-email").value.trim();
+    var password = document.getElementById("al-password").value;
+    var { data, error } = await supabaseClient.auth.signInWithPassword({ email: email, password: password });
+    if (error) { errEl.textContent = "로그인 실패: " + error.message; return; }
+    var role = await routeAfterLogin(data.user);
+    if (!role) {
+      errEl.textContent = "관리자 계정이 아닙니다.";
+      await supabaseClient.auth.signOut();
+    }
+  });
+
+  // ---- Signup ----
+  document.getElementById("signup-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var errEl = document.getElementById("su-error");
+    errEl.textContent = "";
+    if (!supabaseReady) { errEl.textContent = "연결 오류가 발생했습니다."; return; }
+
+    var name = document.getElementById("su-name").value.trim();
+    var school = document.getElementById("su-school").value.trim();
+    var grade = parseInt(document.getElementById("su-grade").value, 10);
+    var email = document.getElementById("su-email").value.trim();
+    var password = document.getElementById("su-password").value;
+    if (!grade) { errEl.textContent = "학년을 선택해주세요."; return; }
+
+    savePendingProfile({ email: email, name: name, school: school, grade: grade, signupSchoolYear: getCurrentSchoolYear() });
+
+    var { data, error } = await supabaseClient.auth.signUp({ email: email, password: password });
+    if (error) { errEl.textContent = "회원가입 실패: " + error.message; return; }
+
+    if (!data.session) {
+      errEl.textContent = "가입 확인 메일을 보냈습니다. 메일함에서 인증 후 학생 로그인 해주세요.";
+      return;
+    }
+    await routeAfterLogin(data.user);
+  });
+
+  // ---- GPA ----
+  async function loadGpaRecords() {
+    var { data } = await supabaseClient.from("gpa_records").select("*").eq("student_id", currentStudentId);
+    var map = {};
+    (data || []).forEach(function (r) { map[r.grade + "-" + r.semester] = r.gpa; });
+    document.getElementById("gpa-tbody").innerHTML = GPA_ROWS.map(function (gs) {
+      var key = gs[0] + "-" + gs[1];
+      var val = map[key] != null ? map[key] : "";
+      return "<tr><td>" + gs[0] + "학년 " + gs[1] + "학기</td><td><input type=\"number\" step=\"0.01\" min=\"0\" max=\"5\" data-grade=\"" + gs[0] + "\" data-semester=\"" + gs[1] + "\" value=\"" + val + "\"></td></tr>";
+    }).join("");
+  }
+
+  document.getElementById("gpa-save-btn").addEventListener("click", async function () {
+    var inputs = document.querySelectorAll("#gpa-tbody input");
+    var upserts = [];
+    inputs.forEach(function (inp) {
+      var v = inp.value.trim();
+      if (v === "") return;
+      upserts.push({
+        student_id: currentStudentId,
+        grade: parseInt(inp.dataset.grade, 10),
+        semester: parseInt(inp.dataset.semester, 10),
+        gpa: parseFloat(v)
+      });
+    });
+    if (upserts.length === 0) { alert("입력된 GPA가 없습니다."); return; }
+    var { error } = await supabaseClient.from("gpa_records").upsert(upserts, { onConflict: "student_id,grade,semester" });
+    if (error) { alert("저장 실패: " + error.message); return; }
+    alert("GPA가 저장되었습니다.");
+  });
+
+  // ---- SAT ----
+  document.getElementById("sat-save-btn").addEventListener("click", async function () {
+    var v = document.getElementById("sat-input").value.trim();
+    var { error } = await supabaseClient.from("students")
+      .update({ sat_score: v ? parseInt(v, 10) : null })
+      .eq("id", currentStudentId);
+    if (error) { alert("저장 실패: " + error.message); return; }
+    alert("SAT 점수가 저장되었습니다.");
+  });
+
+  // ---- AP ----
+  async function loadApScores() {
+    var { data } = await supabaseClient.from("ap_scores").select("*").eq("student_id", currentStudentId).order("created_at");
+    apData = data || [];
+    renderApList();
+  }
+  function renderApList() {
+    var list = document.getElementById("ap-list");
+    if (apData.length === 0) { list.innerHTML = '<p class="empty-state">등록된 AP 점수가 없습니다.</p>'; return; }
+    list.innerHTML = apData.map(function (a) {
+      return '<div class="entry-item"><div class="entry-main"><span class="tag">AP</span>' + escapeHtml(a.subject) + " — " + a.score + "점</div>" +
+        '<button class="card-actions" style="border:none;background:none;color:var(--color-muted-fg);cursor:pointer;" onclick="deleteAp(\'' + a.id + '\')">삭제</button></div>';
+    }).join("");
+  }
+  document.getElementById("ap-add-btn").addEventListener("click", async function () {
+    var subject = document.getElementById("ap-subject-select").value;
+    var score = document.getElementById("ap-score-select").value;
+    if (!subject || !score) { alert("과목과 점수를 선택해주세요."); return; }
+    var { error } = await supabaseClient.from("ap_scores")
+      .upsert({ student_id: currentStudentId, subject: subject, score: parseInt(score, 10) }, { onConflict: "student_id,subject" });
+    if (error) { alert("저장 실패: " + error.message); return; }
+    document.getElementById("ap-score-select").value = "";
+    loadApScores();
+  });
+  async function deleteAp(id) {
+    if (!confirm("삭제하시겠어요?")) return;
+    await supabaseClient.from("ap_scores").delete().eq("id", id);
+    loadApScores();
+  }
+
+  // ---- EC ----
+  async function loadEcRecords() {
+    var { data } = await supabaseClient.from("ec_records").select("*").eq("student_id", currentStudentId).order("created_at");
+    ecData = data || [];
+    renderEcList();
+  }
+  function renderEcList() {
+    var list = document.getElementById("ec-list");
+    if (ecData.length === 0) { list.innerHTML = '<p class="empty-state">등록된 EC 활동이 없습니다.</p>'; return; }
+    list.innerHTML = ecData.map(function (e) {
+      return '<div class="entry-item"><div class="entry-main"><span class="tag">' + escapeHtml(e.category) + "</span>" + escapeHtml(e.title) +
+        (e.description ? " — " + escapeHtml(e.description) : "") + "</div>" +
+        '<button class="card-actions" style="border:none;background:none;color:var(--color-muted-fg);cursor:pointer;" onclick="deleteEc(\'' + e.id + '\')">삭제</button></div>';
+    }).join("");
+  }
+  document.getElementById("ec-add-btn").addEventListener("click", async function () {
+    var category = document.getElementById("ec-category-select").value;
+    var title = document.getElementById("ec-title-input").value.trim();
+    var desc = document.getElementById("ec-desc-input").value.trim();
+    if (!title) { alert("활동명을 입력해주세요."); return; }
+    var { error } = await supabaseClient.from("ec_records")
+      .insert({ student_id: currentStudentId, category: category, title: title, description: desc || null });
+    if (error) { alert("저장 실패: " + error.message); return; }
+    document.getElementById("ec-title-input").value = "";
+    document.getElementById("ec-desc-input").value = "";
+    loadEcRecords();
+  });
+  async function deleteEc(id) {
+    if (!confirm("삭제하시겠어요?")) return;
+    await supabaseClient.from("ec_records").delete().eq("id", id);
+    loadEcRecords();
+  }
+
+  // ---- Admin: student grid + detail ----
+  var allStudents = [];
+  var currentDetailStudentId = null;
+  async function loadAllStudents() {
+    var { data, error } = await supabaseClient.from("students").select("*").order("created_at", { ascending: false });
+    var grid = document.getElementById("student-grid");
+    var empty = document.getElementById("student-empty");
+    allStudents = data || [];
+    if (error || allStudents.length === 0) {
+      empty.style.display = "block";
+      grid.innerHTML = "";
+      return;
+    }
+    empty.style.display = "none";
+    grid.innerHTML = allStudents.map(function (s) {
+      var grade = computeGrade(s.grade_at_signup, s.signup_school_year);
+      return '<div class="student-card" onclick="openStudentDetail(\'' + s.id + '\')">' +
+        '<span class="grade-badge">' + grade + "학년</span>" +
+        "<h4 style=\"margin-top:8px;\">" + escapeHtml(s.name) + "</h4>" +
+        '<div class="school">' + escapeHtml(s.school) + "</div>" +
+        "</div>";
+    }).join("");
+  }
+
+  async function openStudentDetail(id) {
+    var student = allStudents.find(function (s) { return s.id === id; });
+    if (!student) return;
+    currentDetailStudentId = id;
+    var [gpaRes, apRes, ecRes] = await Promise.all([
+      supabaseClient.from("gpa_records").select("*").eq("student_id", id),
+      supabaseClient.from("ap_scores").select("*").eq("student_id", id),
+      supabaseClient.from("ec_records").select("*").eq("student_id", id)
+    ]);
+    var grade = computeGrade(student.grade_at_signup, student.signup_school_year);
+    var gpaMap = {};
+    (gpaRes.data || []).forEach(function (r) { gpaMap[r.grade + "-" + r.semester] = r.gpa; });
+    var gpaRows = GPA_ROWS.map(function (gs) {
+      var key = gs[0] + "-" + gs[1];
+      var val = gpaMap[key] != null ? gpaMap[key] : "-";
+      return "<tr><td>" + gs[0] + "학년 " + gs[1] + "학기</td><td>" + val + "</td></tr>";
+    }).join("");
+    var aps = apRes.data || [];
+    var ecs = ecRes.data || [];
+    var apHtml = aps.length
+      ? aps.map(function (a) { return '<div class="entry-item"><div class="entry-main"><span class="tag">AP</span>' + escapeHtml(a.subject) + " — " + a.score + "점</div></div>"; }).join("")
+      : '<p class="empty-state">등록된 AP 점수가 없습니다.</p>';
+    var ecHtml = ecs.length
+      ? ecs.map(function (e) { return '<div class="entry-item"><div class="entry-main"><span class="tag">' + escapeHtml(e.category) + "</span>" + escapeHtml(e.title) + (e.description ? " — " + escapeHtml(e.description) : "") + "</div></div>"; }).join("")
+      : '<p class="empty-state">등록된 EC 활동이 없습니다.</p>';
+
+    document.getElementById("student-detail-body").innerHTML =
+      "<h3 style=\"margin-bottom:4px;\">" + escapeHtml(student.name) + "</h3>" +
+      "<p style=\"color:var(--color-muted-fg);margin-bottom:var(--space-md);\">" + escapeHtml(student.school) + " · " + grade + "학년</p>" +
+      '<div class="dashboard-section"><h3>GPA</h3><div class="gpa-table-wrap"><table class="gpa-table"><tbody>' + gpaRows + "</tbody></table></div></div>" +
+      '<div class="dashboard-section"><h3>SAT</h3><p>' + (student.sat_score || "미입력") + "</p></div>" +
+      '<div class="dashboard-section"><h3>AP</h3><div class="entry-list">' + apHtml + "</div></div>" +
+      '<div class="dashboard-section"><h3>EC</h3><div class="entry-list">' + ecHtml + "</div></div>";
+    openModal("student-detail-modal");
+  }
+
+  document.getElementById("student-delete-btn").addEventListener("click", async function () {
+    if (!currentDetailStudentId) return;
+    var student = allStudents.find(function (s) { return s.id === currentDetailStudentId; });
+    var name = student ? student.name : "이 학생";
+    if (!confirm(name + " 학생의 모든 기록(GPA/SAT/AP/EC)을 삭제하시겠어요? 이 작업은 되돌릴 수 없습니다.")) return;
+    var { error } = await supabaseClient.from("students").delete().eq("id", currentDetailStudentId);
+    if (error) { alert("삭제 실패: " + error.message); return; }
+    closeModal("student-detail-modal");
+    loadAllStudents();
+  });
+
+  init();
+</script>
+
+<script src="nav.js"></script>
+
+</body>
+</html>

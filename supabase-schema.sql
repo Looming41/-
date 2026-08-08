@@ -1,5 +1,6 @@
--- Kim Eunjeong Institute — Supabase schema
--- Run this once in Supabase SQL Editor (Project > SQL Editor > New query)
+-- 유앤UP 국제컨설팅 — Supabase schema
+-- Run this in Supabase SQL Editor (Project > SQL Editor > New query).
+-- Safe to re-run in full any time: tables use IF NOT EXISTS and policies are dropped/recreated.
 
 create extension if not exists "pgcrypto";
 
@@ -24,7 +25,7 @@ create table if not exists admission_results (
   created_at timestamptz default now()
 );
 
--- 3. EC achievements (EC 탭 성과)
+-- 3. EC achievements (EC 탭 성과 - 관리자가 등록하는 공개 성과)
 create table if not exists ec_achievements (
   id uuid primary key default gen_random_uuid(),
   category text not null check (category in (
@@ -49,36 +50,169 @@ create table if not exists news_posts (
   created_at timestamptz default now()
 );
 
--- Row Level Security: everyone can read, only a logged-in admin can write
+-- 5. Admins — only user IDs listed here are treated as site admins.
+-- IMPORTANT: after running this script, register your existing admin login by running:
+--   insert into admins (id) select id from auth.users where email = '관리자 이메일 주소';
+create table if not exists admins (
+  id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz default now()
+);
+
+-- 6. Students (터미널 회원가입)
+create table if not exists students (
+  id uuid primary key references auth.users(id) on delete cascade,
+  name text not null,
+  school text not null,
+  grade_at_signup int not null,
+  signup_school_year int not null,
+  sat_score int,
+  created_at timestamptz default now()
+);
+
+-- 7. GPA records (학년/학기별)
+create table if not exists gpa_records (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid not null references students(id) on delete cascade,
+  grade int not null,
+  semester int not null check (semester in (1, 2)),
+  gpa numeric(3,2) not null,
+  created_at timestamptz default now(),
+  unique (student_id, grade, semester)
+);
+
+-- 8. AP scores (과목별)
+create table if not exists ap_scores (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid not null references students(id) on delete cascade,
+  subject text not null,
+  score int not null check (score between 1 and 5),
+  created_at timestamptz default now(),
+  unique (student_id, subject)
+);
+
+-- 9. EC records (학생이 직접 기입하는 활동)
+create table if not exists ec_records (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid not null references students(id) on delete cascade,
+  category text not null,
+  title text not null,
+  description text,
+  created_at timestamptz default now()
+);
+
+-- ---------- Row Level Security ----------
 alter table team_members enable row level security;
 alter table admission_results enable row level security;
 alter table ec_achievements enable row level security;
 alter table news_posts enable row level security;
+alter table admins enable row level security;
+alter table students enable row level security;
+alter table gpa_records enable row level security;
+alter table ap_scores enable row level security;
+alter table ec_records enable row level security;
 
+-- Public read for site content
+drop policy if exists "public read team_members" on team_members;
 create policy "public read team_members" on team_members for select using (true);
+
+drop policy if exists "public read admission_results" on admission_results;
 create policy "public read admission_results" on admission_results for select using (true);
+
+drop policy if exists "public read ec_achievements" on ec_achievements;
 create policy "public read ec_achievements" on ec_achievements for select using (true);
+
+drop policy if exists "public read news_posts" on news_posts;
 create policy "public read news_posts" on news_posts for select using (true);
 
+-- Admin-only write for site content (checks membership in `admins`, NOT just "is logged in" —
+-- students also get accounts now, so `auth.role() = 'authenticated'` would have let any student
+-- edit/delete site content and is no longer used).
+drop policy if exists "admin write team_members" on team_members;
 create policy "admin write team_members" on team_members for all
-  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
-create policy "admin write admission_results" on admission_results for all
-  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
-create policy "admin write ec_achievements" on ec_achievements for all
-  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
-create policy "admin write news_posts" on news_posts for all
-  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+  using (exists (select 1 from admins where id = auth.uid()))
+  with check (exists (select 1 from admins where id = auth.uid()));
 
--- Storage: bucket "Photos" must already exist (Storage > New bucket > Photos > Public).
--- Public read for everyone, upload/replace/delete only for a logged-in admin.
+drop policy if exists "admin write admission_results" on admission_results;
+create policy "admin write admission_results" on admission_results for all
+  using (exists (select 1 from admins where id = auth.uid()))
+  with check (exists (select 1 from admins where id = auth.uid()));
+
+drop policy if exists "admin write ec_achievements" on ec_achievements;
+create policy "admin write ec_achievements" on ec_achievements for all
+  using (exists (select 1 from admins where id = auth.uid()))
+  with check (exists (select 1 from admins where id = auth.uid()));
+
+drop policy if exists "admin write news_posts" on news_posts;
+create policy "admin write news_posts" on news_posts for all
+  using (exists (select 1 from admins where id = auth.uid()))
+  with check (exists (select 1 from admins where id = auth.uid()));
+
+-- Admins table: a user may only check their own membership row
+drop policy if exists "self read admins" on admins;
+create policy "self read admins" on admins for select using (auth.uid() = id);
+
+-- Students: a student manages only their own profile; admins can read everyone's
+drop policy if exists "student read own profile" on students;
+create policy "student read own profile" on students for select using (auth.uid() = id);
+
+drop policy if exists "student insert own profile" on students;
+create policy "student insert own profile" on students for insert with check (auth.uid() = id);
+
+drop policy if exists "student update own profile" on students;
+create policy "student update own profile" on students for update using (auth.uid() = id);
+
+drop policy if exists "admin read all students" on students;
+create policy "admin read all students" on students for select
+  using (exists (select 1 from admins where id = auth.uid()));
+
+drop policy if exists "admin delete students" on students;
+create policy "admin delete students" on students for delete
+  using (exists (select 1 from admins where id = auth.uid()));
+
+-- GPA / AP / EC records: a student manages only their own rows; admins can read everyone's
+drop policy if exists "student manage own gpa" on gpa_records;
+create policy "student manage own gpa" on gpa_records for all
+  using (auth.uid() = student_id) with check (auth.uid() = student_id);
+
+drop policy if exists "admin read all gpa" on gpa_records;
+create policy "admin read all gpa" on gpa_records for select
+  using (exists (select 1 from admins where id = auth.uid()));
+
+drop policy if exists "student manage own ap" on ap_scores;
+create policy "student manage own ap" on ap_scores for all
+  using (auth.uid() = student_id) with check (auth.uid() = student_id);
+
+drop policy if exists "admin read all ap" on ap_scores;
+create policy "admin read all ap" on ap_scores for select
+  using (exists (select 1 from admins where id = auth.uid()));
+
+drop policy if exists "student manage own ec" on ec_records;
+create policy "student manage own ec" on ec_records for all
+  using (auth.uid() = student_id) with check (auth.uid() = student_id);
+
+drop policy if exists "admin read all ec" on ec_records;
+create policy "admin read all ec" on ec_records for select
+  using (exists (select 1 from admins where id = auth.uid()));
+
+-- ---------- Storage ----------
+-- Bucket "Photos" must already exist (Storage > New bucket > Photos > Public).
+-- Public read for everyone, upload/replace/delete only for a registered admin.
+drop policy if exists "public read Photos" on storage.objects;
 create policy "public read Photos" on storage.objects for select
   using (bucket_id = 'Photos');
 
+drop policy if exists "admin upload Photos" on storage.objects;
 create policy "admin upload Photos" on storage.objects for insert
-  with check (bucket_id = 'Photos' and auth.role() = 'authenticated');
+  with check (bucket_id = 'Photos' and exists (select 1 from admins where id = auth.uid()));
 
+drop policy if exists "admin update Photos" on storage.objects;
 create policy "admin update Photos" on storage.objects for update
-  using (bucket_id = 'Photos' and auth.role() = 'authenticated');
+  using (bucket_id = 'Photos' and exists (select 1 from admins where id = auth.uid()));
 
+drop policy if exists "admin delete Photos" on storage.objects;
 create policy "admin delete Photos" on storage.objects for delete
-  using (bucket_id = 'Photos' and auth.role() = 'authenticated');
+  using (bucket_id = 'Photos' and exists (select 1 from admins where id = auth.uid()));
+
+-- ---------- One-time setup ----------
+-- Register your existing admin account (replace with the real admin login email):
+-- insert into admins (id) select id from auth.users where email = 'your-admin-email@example.com';

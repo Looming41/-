@@ -34,7 +34,17 @@ async function checkAdmin() {
     return false;
   }
   var { data } = await supabaseClient.auth.getSession();
-  var isAdmin = !!(data && data.session);
+  if (!data || !data.session) {
+    window.isAdminState = false;
+    toggleAdminUI(false);
+    return false;
+  }
+  var { data: adminRow } = await supabaseClient
+    .from("admins")
+    .select("id")
+    .eq("id", data.session.user.id)
+    .maybeSingle();
+  var isAdmin = !!adminRow;
   window.isAdminState = isAdmin;
   toggleAdminUI(isAdmin);
   return isAdmin;
