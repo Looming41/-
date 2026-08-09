@@ -111,14 +111,25 @@ create table if not exists gpa_records (
   unique (student_id, grade, semester)
 );
 
--- 9. AP scores (과목별)
+-- 9. AP scores (과목별). grade = 시험 응시 학년 (성적 추이 그래프에 사용)
 create table if not exists ap_scores (
   id uuid primary key default gen_random_uuid(),
   student_id uuid not null references students(id) on delete cascade,
   subject text not null,
   score int not null check (score between 1 and 5),
+  grade int,
   created_at timestamptz default now(),
   unique (student_id, subject)
+);
+alter table ap_scores add column if not exists grade int;
+
+-- 9b. SAT scores (응시 이력 - 재응시 추이 추적용)
+create table if not exists sat_scores (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid not null references students(id) on delete cascade,
+  score int not null check (score between 400 and 1600),
+  test_date date not null default current_date,
+  created_at timestamptz default now()
 );
 
 -- 10. EC records (학생이 직접 기입하는 활동)
@@ -141,6 +152,7 @@ alter table benchmarks enable row level security;
 alter table students enable row level security;
 alter table gpa_records enable row level security;
 alter table ap_scores enable row level security;
+alter table sat_scores enable row level security;
 alter table ec_records enable row level security;
 
 -- Public read for site content
@@ -225,6 +237,14 @@ create policy "student manage own ap" on ap_scores for all
 
 drop policy if exists "admin read all ap" on ap_scores;
 create policy "admin read all ap" on ap_scores for select
+  using (exists (select 1 from admins where id = auth.uid()));
+
+drop policy if exists "student manage own sat" on sat_scores;
+create policy "student manage own sat" on sat_scores for all
+  using (auth.uid() = student_id) with check (auth.uid() = student_id);
+
+drop policy if exists "admin read all sat" on sat_scores;
+create policy "admin read all sat" on sat_scores for select
   using (exists (select 1 from admins where id = auth.uid()));
 
 drop policy if exists "student manage own ec" on ec_records;

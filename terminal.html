@@ -146,15 +146,21 @@
       <!-- Student dashboard -->
       <div id="student-dashboard" style="display:none;">
         <div class="dashboard-header">
-          <div>
-            <h2 id="student-name-display"></h2>
-            <p><span id="student-school-display"></span> · <span class="grade-badge" id="student-grade-display"></span></p>
+          <div class="profile-row">
+            <div class="avatar-circle" id="student-avatar"></div>
+            <div>
+              <h2 id="student-name-display"></h2>
+              <p><span id="student-school-display"></span> · <span class="grade-badge" id="student-grade-display"></span></p>
+            </div>
           </div>
           <button class="btn btn-ghost" onclick="terminalLogout()">로그아웃</button>
         </div>
 
         <div class="dashboard-section">
-          <h3>목표 대학 티어</h3>
+          <div class="dashboard-section-head">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V3M5 4h14l-3 5 3 5H5"/></svg></span>
+            <h3>목표 대학 티어</h3>
+          </div>
           <div class="inline-form">
             <div class="form-field">
               <label for="target-tier-select">목표</label>
@@ -175,7 +181,10 @@
         </div>
 
         <div class="dashboard-section">
-          <h3>GPA</h3>
+          <div class="dashboard-section-head">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/></svg></span>
+            <h3>GPA</h3>
+          </div>
           <div class="gpa-table-wrap">
             <table class="gpa-table">
               <thead><tr><th>학기</th><th>GPA</th></tr></thead>
@@ -186,24 +195,44 @@
         </div>
 
         <div class="dashboard-section">
-          <h3>SAT</h3>
+          <div class="dashboard-section-head">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
+            <h3>SAT</h3>
+          </div>
           <div class="inline-form">
             <div class="form-field">
-              <label for="sat-input">SAT 점수</label>
-              <input type="number" id="sat-input" min="400" max="1600" placeholder="예: 1500">
+              <label for="sat-date-input">응시일</label>
+              <input type="date" id="sat-date-input">
             </div>
-            <button class="btn btn-primary" id="sat-save-btn">저장</button>
+            <div class="form-field">
+              <label for="sat-score-input">점수</label>
+              <input type="number" id="sat-score-input" min="400" max="1600" placeholder="예: 1500">
+            </div>
+            <button class="btn btn-primary" id="sat-add-btn">추가</button>
           </div>
+          <div class="entry-list" id="sat-list"></div>
         </div>
 
         <div class="dashboard-section">
-          <h3>AP</h3>
+          <div class="dashboard-section-head">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19V5.5"/></svg></span>
+            <h3>AP</h3>
+          </div>
           <div class="inline-form">
             <div class="form-field">
               <label for="ap-subject-select">AP 과목</label>
               <select id="ap-subject-select"></select>
             </div>
-            <div class="form-field" style="max-width:120px;">
+            <div class="form-field" style="max-width:110px;">
+              <label for="ap-grade-select">응시 학년</label>
+              <select id="ap-grade-select">
+                <option value="9">9학년</option>
+                <option value="10">10학년</option>
+                <option value="11">11학년</option>
+                <option value="12">12학년</option>
+              </select>
+            </div>
+            <div class="form-field" style="max-width:100px;">
               <label for="ap-score-select">점수</label>
               <select id="ap-score-select">
                 <option value="">-</option>
@@ -220,7 +249,10 @@
         </div>
 
         <div class="dashboard-section">
-          <h3>EC (Extracurricular)</h3>
+          <div class="dashboard-section-head">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.4 7.2H22l-6 4.4 2.4 7.2L12 16.4 5.6 20.8 8 13.6 2 9.2h7.6z"/></svg></span>
+            <h3>EC (Extracurricular)</h3>
+          </div>
           <div class="inline-form">
             <div class="form-field">
               <label for="ec-category-select">카테고리</label>
@@ -238,14 +270,25 @@
           <button class="btn btn-primary" id="ec-add-btn">추가</button>
           <div class="entry-list" id="ec-list" style="margin-top:var(--space-md);"></div>
         </div>
+
+        <div class="dashboard-section">
+          <div class="dashboard-section-head">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></span>
+            <h3>성적 추이 (목표 대비)</h3>
+          </div>
+          <div id="trend-chart"></div>
+        </div>
       </div>
 
       <!-- Admin dashboard -->
       <div id="admin-dashboard" style="display:none;">
         <div class="dashboard-header">
-          <div>
-            <h2>학생 현황</h2>
-            <p>카드를 클릭하면 상세 정보를 볼 수 있습니다.</p>
+          <div class="profile-row">
+            <div class="avatar-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><circle cx="9" cy="7" r="3"/><path d="M2 20c0-3 3-5 7-5s7 2 7 5M16 4a3 3 0 0 1 0 6M22 20c0-2.5-1.5-4-4-4.5"/></svg></div>
+            <div>
+              <h2>학생 현황</h2>
+              <p>카드를 클릭하면 상세 정보를 볼 수 있습니다.</p>
+            </div>
           </div>
           <button class="btn btn-ghost" onclick="terminalLogout()">로그아웃</button>
         </div>
@@ -253,7 +296,10 @@
         <p class="empty-state" id="student-empty" style="display:none;">등록된 학생이 아직 없습니다.</p>
 
         <div class="dashboard-section" style="margin-top:var(--space-xl);">
-          <h3>기준값 관리 (티어별 GPA/SAT/AP 벤치마크)</h3>
+          <div class="dashboard-section-head">
+            <span class="section-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-11M12 6V3M20 21v-5M20 12V3M2 14h4M10 6h4M18 16h4"/></svg></span>
+            <h3>기준값 관리 (티어별 GPA/SAT/AP 벤치마크)</h3>
+          </div>
           <div class="gpa-table-wrap">
             <table class="benchmark-table" id="admin-benchmark-table">
               <thead><tr><th>티어</th><th>평균 GPA</th><th>SAT 하한</th><th>SAT 상한</th><th>AP 4점+ 하한</th><th>AP 4점+ 상한</th></tr></thead>
@@ -336,6 +382,18 @@
     "Work (paid)", "Other Club/Activity"
   ];
 
+  var TRASH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6h16z"/></svg>';
+  var ICONS = {
+    target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V3M5 4h14l-3 5 3 5H5"/></svg>',
+    gpa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M7 21V10M12 21V4M17 21v-7"/></svg>',
+    sat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>',
+    ap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19V5.5"/></svg>',
+    ec: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.4 7.2H22l-6 4.4 2.4 7.2L12 16.4 5.6 20.8 8 13.6 2 9.2h7.6z"/></svg>',
+    trend: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>'
+  };
+  function sectionHead(icon, title) {
+    return '<div class="dashboard-section-head"><span class="section-icon">' + icon + '</span><h3>' + title + '</h3></div>';
+  }
   var GPA_ROWS = [9, 10, 11, 12].reduce(function (acc, g) { acc.push([g, 1], [g, 2]); return acc; }, []);
   var GPA_SCALE = [2.0, 4.3];
   var SAT_SCALE = [1000, 1600];
@@ -475,14 +533,213 @@
   }
 
   async function computeProgressStats(studentId) {
-    var [gpaRes, apRes] = await Promise.all([
-      supabaseClient.from("gpa_records").select("gpa").eq("student_id", studentId),
-      supabaseClient.from("ap_scores").select("score").eq("student_id", studentId)
+    var [gpaRes, apRes, satRes] = await Promise.all([
+      supabaseClient.from("gpa_records").select("*").eq("student_id", studentId),
+      supabaseClient.from("ap_scores").select("*").eq("student_id", studentId),
+      supabaseClient.from("sat_scores").select("*").eq("student_id", studentId).order("test_date")
     ]);
-    var gpas = gpaRes.data || [];
-    var gpaAvg = gpas.length ? (gpas.reduce(function (s, r) { return s + Number(r.gpa); }, 0) / gpas.length) : 0;
-    var ap4Count = (apRes.data || []).filter(function (a) { return a.score >= 4; }).length;
-    return { gpaAvg: gpaAvg, ap4Count: ap4Count };
+    var gpaRows = gpaRes.data || [];
+    var apRows = apRes.data || [];
+    var satRows = satRes.data || [];
+    var gpaAvg = gpaRows.length ? (gpaRows.reduce(function (s, r) { return s + Number(r.gpa); }, 0) / gpaRows.length) : 0;
+    var ap4Count = apRows.filter(function (a) { return a.score >= 4; }).length;
+    var bestSat = satRows.length ? Math.max.apply(null, satRows.map(function (r) { return r.score; })) : 0;
+    return { gpaAvg: gpaAvg, ap4Count: ap4Count, bestSat: bestSat, gpaRows: gpaRows, apRows: apRows, satRows: satRows };
+  }
+
+  // Maps a calendar date to this student's [grade, semester] index within GPA_ROWS,
+  // using their signup grade/school-year as the anchor. Sept-Jan = semester 1, Feb-Aug = semester 2.
+  function semesterIndexForDate(student, dateStr) {
+    var d = new Date(dateStr);
+    var y = d.getFullYear();
+    var m = d.getMonth() + 1;
+    var calSchoolYear = (m >= 9) ? y : y - 1;
+    var grade = student.grade_at_signup - (student.signup_school_year - calSchoolYear);
+    var sem = (m >= 9 || m <= 1) ? 1 : 2;
+    return GPA_ROWS.findIndex(function (gs) { return gs[0] === grade && gs[1] === sem; });
+  }
+
+  function buildTrendSeries(student, gpaRows, satRows, apRows, benchmark) {
+    var n = GPA_ROWS.length;
+    var gpaPct = new Array(n).fill(null);
+    var satPct = new Array(n).fill(null);
+    var apPct = new Array(n).fill(null);
+
+    var gpaMap = {};
+    (gpaRows || []).forEach(function (r) { gpaMap[r.grade + "-" + r.semester] = r.gpa; });
+    GPA_ROWS.forEach(function (gs, i) {
+      var v = gpaMap[gs[0] + "-" + gs[1]];
+      if (v != null) gpaPct[i] = Math.min(130, (Number(v) / Number(benchmark.avg_gpa)) * 100);
+    });
+
+    var satBuckets = new Array(n).fill(null);
+    (satRows || []).forEach(function (r) {
+      var idx = semesterIndexForDate(student, r.test_date);
+      if (idx < 0 || idx >= n) return;
+      satBuckets[idx] = Math.max(satBuckets[idx] || 0, r.score);
+    });
+    var runningBestSat = null;
+    for (var i = 0; i < n; i++) {
+      if (satBuckets[i] != null) runningBestSat = Math.max(runningBestSat || 0, satBuckets[i]);
+      if (runningBestSat != null) satPct[i] = Math.min(130, (runningBestSat / benchmark.sat_low) * 100);
+    }
+
+    var apBuckets = new Array(n).fill(0);
+    (apRows || []).forEach(function (r) {
+      if (r.score < 4 || !r.grade) return;
+      var idx = GPA_ROWS.findIndex(function (gs) { return gs[0] === r.grade && gs[1] === 2; });
+      if (idx < 0) return;
+      apBuckets[idx] += 1;
+    });
+    var runningApCount = 0;
+    for (var j = 0; j < n; j++) {
+      runningApCount += apBuckets[j];
+      apPct[j] = Math.min(130, (runningApCount / benchmark.ap4_low) * 100);
+    }
+
+    return { gpaPct: gpaPct, satPct: satPct, apPct: apPct };
+  }
+
+  var TREND_COLORS = { gpa: "#2a78d6", sat: "#eb6834", ap: "#1baf7a" };
+  var TREND_NAMES = { gpa: "GPA", sat: "SAT", ap: "AP" };
+
+  // Catmull-Rom-to-Bezier smoothing (tension 1/6) so the line reads as a continuous
+  // curve rather than a straight-segment polyline.
+  function smoothPath(pts) {
+    if (pts.length === 0) return "";
+    if (pts.length === 1) return "";
+    var d = "M" + pts[0][0].toFixed(1) + "," + pts[0][1].toFixed(1);
+    if (pts.length === 2) { d += " L" + pts[1][0].toFixed(1) + "," + pts[1][1].toFixed(1); return d; }
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i === 0 ? 0 : i - 1], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2 < pts.length ? i + 2 : i + 1];
+      var c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+      var c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+      d += " C" + c1x.toFixed(1) + "," + c1y.toFixed(1) + " " + c2x.toFixed(1) + "," + c2y.toFixed(1) + " " + p2[0].toFixed(1) + "," + p2[1].toFixed(1);
+    }
+    return d;
+  }
+
+  function renderTrendChart(containerId, series) {
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    var labels = GPA_ROWS.map(function (gs) { return gs[0] + "-" + gs[1]; });
+    var n = labels.length;
+    var allVals = [].concat(series.gpaPct, series.satPct, series.apPct).filter(function (v) { return v != null; });
+    if (allVals.length === 0) {
+      el.innerHTML = '<p class="trend-empty">아직 추이를 그릴 데이터가 없어요. GPA/SAT/AP를 입력하면 여기에 표시됩니다.</p>';
+      return;
+    }
+    var yMax = Math.max(130, Math.ceil((Math.max.apply(null, allVals.concat([100])) + 10) / 10) * 10);
+
+    var uid = containerId;
+    var plotLeft = 8, plotRight = 600, plotTop = 16, plotBottom = 190;
+    var viewH = 216;
+    var xScale = function (i) { return plotLeft + (i * (plotRight - plotLeft)) / (n - 1); };
+    var yScale = function (v) { return plotBottom - (v / yMax) * (plotBottom - plotTop); };
+
+    function seriesGroup(key, arr, color) {
+      var pts = [];
+      arr.forEach(function (v, i) { if (v != null) pts.push([xScale(i), yScale(v)]); });
+      if (pts.length === 0) return "";
+      var lineD = smoothPath(pts);
+      var areaD = pts.length > 1
+        ? lineD + " L" + pts[pts.length - 1][0].toFixed(1) + "," + plotBottom + " L" + pts[0][0].toFixed(1) + "," + plotBottom + " Z"
+        : "";
+      var area = areaD ? '<path d="' + areaD + '" fill="url(#' + uid + '-grad-' + key + ')" stroke="none"></path>' : "";
+      var line = pts.length > 1 ? '<path d="' + lineD + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>' : "";
+      var lastPt = pts[pts.length - 1];
+      var endDot = '<circle cx="' + lastPt[0].toFixed(1) + '" cy="' + lastPt[1].toFixed(1) + '" r="4" fill="' + color + '" stroke="#fff" stroke-width="2"></circle>';
+      var hoverDot = '<circle id="' + uid + '-dot-' + key + '" r="5" fill="' + color + '" stroke="#fff" stroke-width="2" opacity="0"></circle>';
+      return area + line + endDot + hoverDot;
+    }
+
+    // Solid hairline reference gridlines (never dashed) at 0/50/100% of the plotted scale.
+    var gridLines = [0, 0.5, 1].map(function (f) {
+      var y = plotTop + f * (plotBottom - plotTop);
+      return '<line x1="' + plotLeft + '" y1="' + y.toFixed(1) + '" x2="' + plotRight + '" y2="' + y.toFixed(1) + '" stroke="var(--color-border)" stroke-width="1"></line>';
+    }).join("");
+
+    // The target line is a threshold annotation, not an axis gridline, so dashing it here
+    // is what tells them apart at a glance.
+    var targetY = yScale(100);
+    var targetLine =
+      '<line x1="' + plotLeft + '" y1="' + targetY.toFixed(1) + '" x2="' + plotRight + '" y2="' + targetY.toFixed(1) + '" stroke="var(--color-fg)" stroke-width="1.5" stroke-dasharray="5,4"></line>' +
+      '<text x="' + plotLeft + '" y="' + (targetY - 6).toFixed(1) + '" font-size="11" font-weight="700" fill="var(--color-fg)">목표</text>';
+
+    var xLabels = labels.map(function (lab, i) {
+      return '<text x="' + xScale(i).toFixed(1) + '" y="' + (plotBottom + 18) + '" font-size="10" fill="var(--color-muted-fg)" text-anchor="middle">' + lab + '</text>';
+    }).join("");
+
+    var defs = '<defs>' + ["gpa", "sat", "ap"].map(function (key) {
+      return '<linearGradient id="' + uid + '-grad-' + key + '" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0%" stop-color="' + TREND_COLORS[key] + '" stop-opacity="0.28"></stop>' +
+        '<stop offset="100%" stop-color="' + TREND_COLORS[key] + '" stop-opacity="0"></stop>' +
+        "</linearGradient>";
+    }).join("") + "</defs>";
+
+    var crosshair = '<line id="' + uid + '-crosshair" x1="' + plotLeft + '" y1="' + plotTop + '" x2="' + plotLeft + '" y2="' + plotBottom + '" stroke="var(--color-muted-fg)" stroke-width="1" opacity="0"></line>';
+    var hoverCapture = '<rect id="' + uid + '-capture" x="' + plotLeft + '" y="' + plotTop + '" width="' + (plotRight - plotLeft) + '" height="' + (plotBottom - plotTop) + '" fill="transparent"></rect>';
+
+    var svg =
+      '<svg id="' + uid + '-svg" viewBox="0 0 640 ' + viewH + '" class="trend-svg" role="img" aria-label="GPA, SAT, AP 목표 대비 추이 그래프" style="cursor:crosshair;">' +
+      defs + gridLines +
+      seriesGroup("gpa", series.gpaPct, TREND_COLORS.gpa) +
+      seriesGroup("sat", series.satPct, TREND_COLORS.sat) +
+      seriesGroup("ap", series.apPct, TREND_COLORS.ap) +
+      targetLine + xLabels + crosshair + hoverCapture +
+      "</svg>";
+
+    var legend =
+      '<div class="trend-legend">' +
+      '<span class="trend-legend-item"><span class="dot" style="background:' + TREND_COLORS.gpa + '"></span>GPA</span>' +
+      '<span class="trend-legend-item"><span class="dot" style="background:' + TREND_COLORS.sat + '"></span>SAT</span>' +
+      '<span class="trend-legend-item"><span class="dot" style="background:' + TREND_COLORS.ap + '"></span>AP (4점+ 누적)</span>' +
+      '<span class="trend-legend-item"><span class="dot line"></span>목표선 (100%)</span>' +
+      "</div>";
+
+    el.innerHTML = legend + '<div class="trend-chart-wrap">' + svg +
+      '<div class="trend-tooltip" id="' + uid + '-tooltip" style="top:' + ((plotTop / viewH) * 100).toFixed(2) + '%;"></div></div>';
+
+    // Hover crosshair + tooltip
+    var svgEl = document.getElementById(uid + "-svg");
+    var crosshairEl = document.getElementById(uid + "-crosshair");
+    var tooltipEl = document.getElementById(uid + "-tooltip");
+    var dotEls = { gpa: document.getElementById(uid + "-dot-gpa"), sat: document.getElementById(uid + "-dot-sat"), ap: document.getElementById(uid + "-dot-ap") };
+
+    function handleMove(evt) {
+      var rect = svgEl.getBoundingClientRect();
+      var clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      var xUser = ((clientX - rect.left) / rect.width) * 640;
+      var idx = Math.round(((xUser - plotLeft) / (plotRight - plotLeft)) * (n - 1));
+      idx = Math.max(0, Math.min(n - 1, idx));
+      var xPix = xScale(idx);
+      crosshairEl.setAttribute("x1", xPix); crosshairEl.setAttribute("x2", xPix); crosshairEl.setAttribute("opacity", "1");
+
+      var rows = "";
+      ["gpa", "sat", "ap"].forEach(function (key) {
+        var val = series[key + "Pct"][idx];
+        var dot = dotEls[key];
+        if (!dot) return;
+        if (val != null) {
+          dot.setAttribute("cx", xPix); dot.setAttribute("cy", yScale(val)); dot.setAttribute("opacity", "1");
+          rows += '<div class="trend-tooltip-row"><span class="dot" style="background:' + TREND_COLORS[key] + '"></span>' + TREND_NAMES[key] + " " + Math.round(val) + "%</div>";
+        } else {
+          dot.setAttribute("opacity", "0");
+        }
+      });
+      tooltipEl.innerHTML = '<div class="trend-tooltip-title">' + labels[idx] + "</div>" + (rows || '<div class="trend-tooltip-row">데이터 없음</div>');
+      tooltipEl.style.left = ((xPix / 640) * 100).toFixed(2) + "%";
+      tooltipEl.style.opacity = "1";
+    }
+    function handleLeave() {
+      crosshairEl.setAttribute("opacity", "0");
+      Object.keys(dotEls).forEach(function (k) { if (dotEls[k]) dotEls[k].setAttribute("opacity", "0"); });
+      tooltipEl.style.opacity = "0";
+    }
+    svgEl.addEventListener("mousemove", handleMove);
+    svgEl.addEventListener("mouseleave", handleLeave);
+    svgEl.addEventListener("touchmove", handleMove, { passive: true });
+    svgEl.addEventListener("touchend", handleLeave);
   }
 
   async function renderStudentProgress(student) {
@@ -494,6 +751,7 @@
       container.innerHTML = "";
       empty.style.display = "block";
       tableWrap.style.display = "none";
+      document.getElementById("trend-chart").innerHTML = "";
       return;
     }
     var benchmark = benchmarksData.find(function (b) { return b.tier === student.target_tier; });
@@ -503,13 +761,13 @@
     tableWrap.style.display = "";
 
     var stats = await computeProgressStats(student.id);
-    var satVal = student.sat_score || 0;
     container.innerHTML = '<div id="meter-overall"></div><div id="meter-gpa"></div><div id="meter-sat"></div><div id="meter-ap"></div>';
-    renderOverallMeter("meter-overall", computeBreakdownPct(stats.gpaAvg, satVal, stats.ap4Count, benchmark));
+    renderOverallMeter("meter-overall", computeBreakdownPct(stats.gpaAvg, stats.bestSat, stats.ap4Count, benchmark));
     renderMeter("meter-gpa", { title: "GPA", currentValue: stats.gpaAvg, targetLow: Number(benchmark.avg_gpa), decimals: 2, scaleMin: GPA_SCALE[0], scaleMax: GPA_SCALE[1] });
-    renderMeter("meter-sat", { title: "SAT", currentValue: satVal, targetLow: benchmark.sat_low, targetHigh: benchmark.sat_high, decimals: 0, scaleMin: SAT_SCALE[0], scaleMax: SAT_SCALE[1] });
+    renderMeter("meter-sat", { title: "SAT", currentValue: stats.bestSat, targetLow: benchmark.sat_low, targetHigh: benchmark.sat_high, decimals: 0, scaleMin: SAT_SCALE[0], scaleMax: SAT_SCALE[1] });
     renderMeter("meter-ap", { title: "AP (4점 이상 개수)", currentValue: stats.ap4Count, targetLow: benchmark.ap4_low, targetHigh: benchmark.ap4_high, decimals: 0, scaleMin: AP_SCALE[0], scaleMax: AP_SCALE[1] });
     renderBenchmarkTable("benchmark-tbody", student.target_tier);
+    renderTrendChart("trend-chart", buildTrendSeries(student, stats.gpaRows, stats.satRows, stats.apRows, benchmark));
   }
 
   function showAuthSection() {
@@ -525,12 +783,13 @@
     currentStudentId = student.id;
     currentStudentRow = student;
     document.getElementById("student-name-display").textContent = student.name;
+    document.getElementById("student-avatar").textContent = (student.name || "?").charAt(0);
     document.getElementById("student-school-display").textContent = student.school;
     document.getElementById("student-grade-display").textContent =
       computeGrade(student.grade_at_signup, student.signup_school_year) + "학년";
-    document.getElementById("sat-input").value = student.sat_score || "";
     loadGpaRecords();
     loadApScores();
+    loadSatScores();
     loadEcRecords();
     if (benchmarksData.length === 0) await loadBenchmarks();
     populateTargetTierSelect(student.target_tier);
@@ -688,16 +947,37 @@
   });
 
   // ---- SAT ----
-  document.getElementById("sat-save-btn").addEventListener("click", async function () {
-    var v = document.getElementById("sat-input").value.trim();
-    var satVal = v ? parseInt(v, 10) : null;
-    var { error } = await supabaseClient.from("students")
-      .update({ sat_score: satVal })
-      .eq("id", currentStudentId);
+  var satData = [];
+  async function loadSatScores() {
+    var { data } = await supabaseClient.from("sat_scores").select("*").eq("student_id", currentStudentId).order("test_date");
+    satData = data || [];
+    renderSatList();
+  }
+  function renderSatList() {
+    var list = document.getElementById("sat-list");
+    if (satData.length === 0) { list.innerHTML = '<p class="empty-state">등록된 SAT 점수가 없습니다.</p>'; return; }
+    list.innerHTML = satData.map(function (s) {
+      return '<div class="entry-item"><div class="entry-main"><span class="tag">SAT</span>' + s.test_date + " — " + s.score + "점</div>" +
+        '<button class="entry-delete-btn" title="삭제" onclick="deleteSat(\'' + s.id + '\')">' + TRASH_ICON + '</button></div>';
+    }).join("");
+  }
+  document.getElementById("sat-add-btn").addEventListener("click", async function () {
+    var date = document.getElementById("sat-date-input").value;
+    var score = document.getElementById("sat-score-input").value;
+    if (!date || !score) { alert("응시일과 점수를 입력해주세요."); return; }
+    var { error } = await supabaseClient.from("sat_scores")
+      .insert({ student_id: currentStudentId, test_date: date, score: parseInt(score, 10) });
     if (error) { alert("저장 실패: " + error.message); return; }
-    alert("SAT 점수가 저장되었습니다.");
-    if (currentStudentRow) { currentStudentRow.sat_score = satVal; renderStudentProgress(currentStudentRow); }
+    document.getElementById("sat-score-input").value = "";
+    loadSatScores();
+    if (currentStudentRow) renderStudentProgress(currentStudentRow);
   });
+  async function deleteSat(id) {
+    if (!confirm("삭제하시겠어요?")) return;
+    await supabaseClient.from("sat_scores").delete().eq("id", id);
+    loadSatScores();
+    if (currentStudentRow) renderStudentProgress(currentStudentRow);
+  }
 
   // ---- AP ----
   async function loadApScores() {
@@ -709,16 +989,17 @@
     var list = document.getElementById("ap-list");
     if (apData.length === 0) { list.innerHTML = '<p class="empty-state">등록된 AP 점수가 없습니다.</p>'; return; }
     list.innerHTML = apData.map(function (a) {
-      return '<div class="entry-item"><div class="entry-main"><span class="tag">AP</span>' + escapeHtml(a.subject) + " — " + a.score + "점</div>" +
-        '<button class="card-actions" style="border:none;background:none;color:var(--color-muted-fg);cursor:pointer;" onclick="deleteAp(\'' + a.id + '\')">삭제</button></div>';
+      return '<div class="entry-item"><div class="entry-main"><span class="tag">AP</span>' + (a.grade ? a.grade + "학년 · " : "") + escapeHtml(a.subject) + " — " + a.score + "점</div>" +
+        '<button class="entry-delete-btn" title="삭제" onclick="deleteAp(\'' + a.id + '\')">' + TRASH_ICON + '</button></div>';
     }).join("");
   }
   document.getElementById("ap-add-btn").addEventListener("click", async function () {
     var subject = document.getElementById("ap-subject-select").value;
+    var grade = document.getElementById("ap-grade-select").value;
     var score = document.getElementById("ap-score-select").value;
     if (!subject || !score) { alert("과목과 점수를 선택해주세요."); return; }
     var { error } = await supabaseClient.from("ap_scores")
-      .upsert({ student_id: currentStudentId, subject: subject, score: parseInt(score, 10) }, { onConflict: "student_id,subject" });
+      .upsert({ student_id: currentStudentId, subject: subject, grade: parseInt(grade, 10), score: parseInt(score, 10) }, { onConflict: "student_id,subject" });
     if (error) { alert("저장 실패: " + error.message); return; }
     document.getElementById("ap-score-select").value = "";
     loadApScores();
@@ -743,7 +1024,7 @@
     list.innerHTML = ecData.map(function (e) {
       return '<div class="entry-item"><div class="entry-main"><span class="tag">' + escapeHtml(e.category) + "</span>" + escapeHtml(e.title) +
         (e.description ? " — " + escapeHtml(e.description) : "") + "</div>" +
-        '<button class="card-actions" style="border:none;background:none;color:var(--color-muted-fg);cursor:pointer;" onclick="deleteEc(\'' + e.id + '\')">삭제</button></div>';
+        '<button class="entry-delete-btn" title="삭제" onclick="deleteEc(\'' + e.id + '\')">' + TRASH_ICON + '</button></div>';
     }).join("");
   }
   document.getElementById("ec-add-btn").addEventListener("click", async function () {
@@ -792,9 +1073,10 @@
     var student = allStudents.find(function (s) { return s.id === id; });
     if (!student) return;
     currentDetailStudentId = id;
-    var [gpaRes, apRes, ecRes] = await Promise.all([
+    var [gpaRes, apRes, satRes, ecRes] = await Promise.all([
       supabaseClient.from("gpa_records").select("*").eq("student_id", id),
       supabaseClient.from("ap_scores").select("*").eq("student_id", id),
+      supabaseClient.from("sat_scores").select("*").eq("student_id", id).order("test_date"),
       supabaseClient.from("ec_records").select("*").eq("student_id", id)
     ]);
     var grade = computeGrade(student.grade_at_signup, student.signup_school_year);
@@ -806,38 +1088,45 @@
       return "<tr><td>" + gs[0] + "학년 " + gs[1] + "학기</td><td>" + val + "</td></tr>";
     }).join("");
     var aps = apRes.data || [];
+    var sats = satRes.data || [];
     var ecs = ecRes.data || [];
     var apHtml = aps.length
-      ? aps.map(function (a) { return '<div class="entry-item"><div class="entry-main"><span class="tag">AP</span>' + escapeHtml(a.subject) + " — " + a.score + "점</div></div>"; }).join("")
+      ? aps.map(function (a) { return '<div class="entry-item"><div class="entry-main"><span class="tag">AP</span>' + (a.grade ? a.grade + "학년 · " : "") + escapeHtml(a.subject) + " — " + a.score + "점</div></div>"; }).join("")
       : '<p class="empty-state">등록된 AP 점수가 없습니다.</p>';
+    var satHtml = sats.length
+      ? sats.map(function (s) { return '<div class="entry-item"><div class="entry-main"><span class="tag">SAT</span>' + s.test_date + " — " + s.score + "점</div></div>"; }).join("")
+      : '<p class="empty-state">등록된 SAT 점수가 없습니다.</p>';
     var ecHtml = ecs.length
       ? ecs.map(function (e) { return '<div class="entry-item"><div class="entry-main"><span class="tag">' + escapeHtml(e.category) + "</span>" + escapeHtml(e.title) + (e.description ? " — " + escapeHtml(e.description) : "") + "</div></div>"; }).join("")
       : '<p class="empty-state">등록된 EC 활동이 없습니다.</p>';
 
     var targetBenchmark = student.target_tier ? benchmarksData.find(function (b) { return b.tier === student.target_tier; }) : null;
     var progressHtml = targetBenchmark
-      ? '<div class="dashboard-section"><h3>목표: ' + escapeHtml(targetBenchmark.tier_label) + '</h3>' +
+      ? '<div class="dashboard-section">' + sectionHead(ICONS.target, "목표: " + escapeHtml(targetBenchmark.tier_label)) +
         '<div id="detail-meter-overall"></div><div id="detail-meter-gpa"></div><div id="detail-meter-sat"></div><div id="detail-meter-ap"></div></div>'
-      : '<div class="dashboard-section"><h3>목표 티어</h3><p class="empty-state">학생이 아직 목표 티어를 선택하지 않았습니다.</p></div>';
+      : '<div class="dashboard-section">' + sectionHead(ICONS.target, "목표 티어") + '<p class="empty-state">학생이 아직 목표 티어를 선택하지 않았습니다.</p></div>';
 
     document.getElementById("student-detail-body").innerHTML =
-      "<h3 style=\"margin-bottom:4px;\">" + escapeHtml(student.name) + "</h3>" +
-      "<p style=\"color:var(--color-muted-fg);margin-bottom:var(--space-md);\">" + escapeHtml(student.school) + " · " + grade + "학년</p>" +
+      '<div class="profile-row" style="margin-bottom:var(--space-md);">' +
+      '<div class="avatar-circle">' + escapeHtml((student.name || "?").charAt(0)) + "</div>" +
+      "<div><h3 style=\"margin-bottom:2px;\">" + escapeHtml(student.name) + "</h3>" +
+      "<p style=\"color:var(--color-muted-fg);\">" + escapeHtml(student.school) + " · " + grade + "학년</p></div></div>" +
       progressHtml +
-      '<div class="dashboard-section"><h3>GPA</h3><div class="gpa-table-wrap"><table class="gpa-table"><tbody>' + gpaRows + "</tbody></table></div></div>" +
-      '<div class="dashboard-section"><h3>SAT</h3><p>' + (student.sat_score || "미입력") + "</p></div>" +
-      '<div class="dashboard-section"><h3>AP</h3><div class="entry-list">' + apHtml + "</div></div>" +
-      '<div class="dashboard-section"><h3>EC</h3><div class="entry-list">' + ecHtml + "</div></div>";
+      '<div class="dashboard-section">' + sectionHead(ICONS.gpa, "GPA") + '<div class="gpa-table-wrap"><table class="gpa-table"><tbody>' + gpaRows + "</tbody></table></div></div>" +
+      '<div class="dashboard-section">' + sectionHead(ICONS.sat, "SAT") + '<div class="entry-list">' + satHtml + "</div></div>" +
+      '<div class="dashboard-section">' + sectionHead(ICONS.ap, "AP") + '<div class="entry-list">' + apHtml + "</div></div>" +
+      '<div class="dashboard-section">' + sectionHead(ICONS.ec, "EC") + '<div class="entry-list">' + ecHtml + "</div></div>" +
+      (targetBenchmark ? '<div class="dashboard-section">' + sectionHead(ICONS.trend, "성적 추이 (목표 대비)") + '<div id="detail-trend-chart"></div></div>' : "");
 
     if (targetBenchmark) {
-      var apScores = aps.map(function (a) { return a.score; });
-      var ap4CountDetail = apScores.filter(function (s) { return s >= 4; }).length;
+      var ap4CountDetail = aps.filter(function (a) { return a.score >= 4; }).length;
       var gpaAvgDetail = gpaAvgFromRows(gpaRes.data);
-      var satValDetail = student.sat_score || 0;
-      renderOverallMeter("detail-meter-overall", computeBreakdownPct(gpaAvgDetail, satValDetail, ap4CountDetail, targetBenchmark));
+      var bestSatDetail = sats.length ? Math.max.apply(null, sats.map(function (s) { return s.score; })) : 0;
+      renderOverallMeter("detail-meter-overall", computeBreakdownPct(gpaAvgDetail, bestSatDetail, ap4CountDetail, targetBenchmark));
       renderMeter("detail-meter-gpa", { title: "GPA", currentValue: gpaAvgDetail, targetLow: Number(targetBenchmark.avg_gpa), decimals: 2, scaleMin: GPA_SCALE[0], scaleMax: GPA_SCALE[1] });
-      renderMeter("detail-meter-sat", { title: "SAT", currentValue: satValDetail, targetLow: targetBenchmark.sat_low, targetHigh: targetBenchmark.sat_high, decimals: 0, scaleMin: SAT_SCALE[0], scaleMax: SAT_SCALE[1] });
+      renderMeter("detail-meter-sat", { title: "SAT", currentValue: bestSatDetail, targetLow: targetBenchmark.sat_low, targetHigh: targetBenchmark.sat_high, decimals: 0, scaleMin: SAT_SCALE[0], scaleMax: SAT_SCALE[1] });
       renderMeter("detail-meter-ap", { title: "AP (4점 이상 개수)", currentValue: ap4CountDetail, targetLow: targetBenchmark.ap4_low, targetHigh: targetBenchmark.ap4_high, decimals: 0, scaleMin: AP_SCALE[0], scaleMax: AP_SCALE[1] });
+      renderTrendChart("detail-trend-chart", buildTrendSeries(student, gpaRes.data, sats, aps, targetBenchmark));
     }
     openModal("student-detail-modal");
   }
