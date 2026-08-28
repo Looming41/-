@@ -1103,6 +1103,48 @@ section{padding:var(--space-2xl) 0;}
 .stat-row.on-dark .stat-tile .value{color:#9DC0FF;}
 .stat-row.on-dark .stat-tile .label{color:#B7C5E0;}
 
+/* ---------- Floating quick-nav (홈 화면 오른쪽 스크롤 고정 카테고리 메뉴) ---------- */
+.quick-nav{
+  position:fixed;
+  top:50%;
+  right:20px;
+  transform:translateY(-50%);
+  z-index:60;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  background:#fff;
+  border:1px solid var(--color-border);
+  border-radius:18px;
+  padding:10px 8px;
+  box-shadow:var(--shadow-card);
+}
+.quick-nav-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 16px 9px 10px;
+  border-radius:12px;
+  color:var(--color-fg);
+  font-size:0.82rem;
+  font-weight:700;
+  white-space:nowrap;
+  transition:background 160ms var(--ease), color 160ms var(--ease);
+}
+.quick-nav-item:hover{background:var(--color-bg);color:var(--color-accent);}
+.quick-nav-icon{width:18px;height:18px;color:var(--color-accent);flex-shrink:0;display:flex;}
+.quick-nav-icon svg{width:100%;height:100%;}
+.quick-nav-divider{height:1px;background:var(--color-border);margin:6px 8px;}
+.quick-nav-cta{background:linear-gradient(135deg, var(--color-primary), var(--color-secondary));color:#fff;}
+.quick-nav-cta .quick-nav-icon{color:#fff;}
+.quick-nav-cta:hover{background:linear-gradient(135deg, var(--color-primary-dark), var(--color-secondary));color:#fff;}
+
+/* Only enough horizontal room outside the 1200px container gets this; narrower
+   viewports (and the mobile hamburger layout) don't get a floating right-rail. */
+@media (max-width:1300px){
+  .quick-nav{display:none;}
+}
+
 /* ---------- Achievement cards (연구협업 · 수상 · 장학) ---------- */
 .achieve-grid{
   display:grid;
