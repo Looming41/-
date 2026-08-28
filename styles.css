@@ -69,7 +69,7 @@ button:focus-visible{
 .site-header .container{
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  gap:28px;
   min-height:128px;
 }
 .logo{
@@ -92,7 +92,7 @@ button:focus-visible{
 .footer-brand .logo-mark{height:80px;}
 .nav-links{
   display:flex;
-  gap:28px;
+  gap:22px;
   flex-shrink:0;
 }
 .nav-links a{
@@ -161,7 +161,7 @@ button:focus-visible{
   background:#DC2626;
   color:#fff;
 }
-.header-cta{display:flex;align-items:center;gap:var(--space-md);}
+.header-cta{display:flex;align-items:center;gap:var(--space-md);margin-left:auto;}
 .nav-toggle{
   display:none;
   align-items:center;
@@ -1051,6 +1051,135 @@ section{padding:var(--space-2xl) 0;}
   .form-row{grid-template-columns:1fr;}
 }
 
+/* ---------- Stat tiles (credentials row) ---------- */
+.stat-row{display:grid;grid-template-columns:repeat(4, 1fr);gap:var(--space-md);margin-bottom:var(--space-xl);}
+.stat-tile{
+  background:var(--color-card);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-md);
+  padding:var(--space-md);
+  text-align:center;
+}
+.stat-tile .value{font-family:var(--font-heading);font-weight:800;font-size:1.5rem;color:var(--color-accent);}
+.stat-tile .label{font-size:0.82rem;color:var(--color-muted-fg);margin-top:4px;}
+.stat-row.on-dark .stat-tile{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.14);}
+.stat-row.on-dark .stat-tile .value{color:#9DC0FF;}
+.stat-row.on-dark .stat-tile .label{color:#B7C5E0;}
+
+/* ---------- Before/after comparison table (case studies) ---------- */
+.compare-table{width:100%;border-collapse:collapse;margin-top:var(--space-md);}
+.compare-table th, .compare-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--color-border);font-size:0.88rem;vertical-align:top;}
+.compare-table th{font-size:0.76rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--color-muted-fg);font-weight:700;}
+.compare-table th.after, .compare-table td.after{background:rgba(47,111,237,0.06);}
+.compare-table td.label{font-weight:700;white-space:nowrap;}
+
+/* ---------- Case study cards (합격 전략 사례) ---------- */
+.case-card{
+  background:var(--color-card);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  padding:var(--space-xl);
+  margin-bottom:var(--space-xl);
+  box-shadow:var(--shadow-card);
+}
+.case-card:last-child{margin-bottom:0;}
+.case-head{display:flex;align-items:center;gap:14px;margin-bottom:4px;flex-wrap:wrap;}
+.case-badge{
+  width:48px;height:48px;border-radius:12px;flex-shrink:0;
+  background:#fff;
+  border:1px solid var(--color-border);
+  display:flex;align-items:center;justify-content:center;
+  padding:6px;
+}
+.case-badge img{width:100%;height:100%;object-fit:contain;}
+.case-head h3{font-size:1.2rem;font-weight:800;}
+.case-major{color:var(--color-muted-fg);font-size:0.9rem;margin-bottom:var(--space-sm);}
+.case-table-wrap{overflow-x:auto;}
+.case-insight{
+  background:rgba(47,111,237,0.06);
+  border:1px solid rgba(47,111,237,0.2);
+  border-radius:var(--radius-md);
+  padding:var(--space-md) var(--space-lg);
+  margin-top:var(--space-lg);
+}
+.case-insight h4{font-size:0.95rem;font-weight:800;margin-bottom:8px;color:var(--color-accent);}
+
+/* ---------- EC design principles / do-avoid comparison ---------- */
+.ec-compare{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg);margin-top:var(--space-lg);}
+.ec-compare-col{border-radius:var(--radius-md);padding:var(--space-lg);}
+.ec-compare-col.avoid{background:rgba(220,38,38,0.05);border:1px solid rgba(220,38,38,0.18);}
+.ec-compare-col.good{background:rgba(47,111,237,0.06);border:1px solid rgba(47,111,237,0.2);}
+.ec-compare-col h4{font-size:0.95rem;font-weight:800;margin-bottom:10px;}
+.ec-compare-col.avoid h4{color:#DC2626;}
+.ec-compare-col.good h4{color:var(--color-accent);}
+
+/* Bulleted lists inside cards — the site-wide `ul{list-style:none}` reset (used for
+   nav/footer lists) strips markers everywhere, so these components restore their own. */
+.value-card ul, .ec-compare-col ul, .case-insight ul{margin:0;padding:0;list-style:none;}
+.value-card li, .ec-compare-col li, .case-insight li{
+  position:relative;
+  padding-left:1.3em;
+  margin-bottom:10px;
+  font-size:0.88rem;
+  line-height:1.6;
+  color:var(--color-muted-fg);
+}
+.value-card li:last-child, .ec-compare-col li:last-child, .case-insight li:last-child{margin-bottom:0;}
+.value-card li::before, .ec-compare-col.good li::before, .case-insight li::before{
+  content:"";
+  position:absolute;
+  left:2px;top:0.55em;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--color-accent);
+}
+.ec-compare-col.avoid li::before{
+  content:"";
+  position:absolute;
+  left:2px;top:0.55em;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:#DC2626;
+}
+.ec-compare-col li{color:var(--color-fg);}
+.case-insight li{color:var(--color-fg);}
+
+/* ---------- Admission list table (grouped, static) ---------- */
+.admlist-group{margin-bottom:var(--space-xl);}
+.admlist-group:last-child{margin-bottom:0;}
+.admlist-group h4{font-size:0.95rem;font-weight:800;margin-bottom:var(--space-md);color:var(--color-fg);}
+.admlist-table-wrap{overflow-x:auto;}
+.admlist-table{width:100%;border-collapse:collapse;}
+.admlist-table td{padding:8px 10px;border-bottom:1px solid var(--color-border);font-size:0.86rem;}
+.admlist-table td.name{font-weight:700;white-space:nowrap;width:1%;color:var(--color-accent);}
+.admlist-table tr:hover{background:var(--color-bg);}
+
+/* Logo + headcount grid (합격 학교별 현황) */
+.logo-count-grid{display:flex;flex-wrap:wrap;gap:18px;}
+.logo-count-badge{display:flex;flex-direction:column;align-items:center;gap:8px;width:104px;text-align:center;position:relative;}
+.logo-count-badge .logo-box{
+  width:78px;height:78px;border-radius:16px;
+  background:#fff;border:1px solid var(--color-border);
+  display:flex;align-items:center;justify-content:center;padding:12px;
+  transition:transform 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+.logo-count-badge:hover .logo-box{transform:translateY(-3px);box-shadow:var(--shadow-card);}
+.logo-count-badge .logo-box img{width:100%;height:100%;object-fit:contain;}
+.logo-count-badge .count{
+  position:absolute;top:-6px;right:6px;
+  background:var(--color-accent);color:#fff;font-size:0.7rem;font-weight:800;
+  min-width:20px;height:20px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+  padding:0 5px;box-shadow:0 2px 6px rgba(16,27,51,0.25);
+}
+.logo-count-badge .lc-name{font-size:0.76rem;font-weight:600;color:var(--color-fg);line-height:1.3;}
+.admlist-note{color:var(--color-muted-fg);font-size:0.85rem;margin-top:var(--space-md);}
+
+@media (max-width:768px){
+  .stat-row{grid-template-columns:repeat(2, 1fr);}
+  .ec-compare{grid-template-columns:1fr;}
+  .compare-table{font-size:0.8rem;}
+}
+
 /* ---------- CTA banner ---------- */
 .cta-banner{
   background:linear-gradient(120deg, var(--color-primary) 0%, var(--color-secondary) 100%);
@@ -1102,10 +1231,10 @@ footer{background:var(--color-fg);color:#B9C4D9;padding:var(--space-xl) 0 var(--
 /* Nav switches to the hamburger well before general content reflows — the desktop
    nav (logo + 7 links + CTA) runs out of room around ~1200px, long before 768px. */
 @media (max-width:1200px){
-  .site-header .container{flex-wrap:wrap;row-gap:8px;}
+  .site-header .container{flex-wrap:wrap;row-gap:8px;gap:8px;justify-content:space-between;}
   .logo-mark{height:64px;}
   .nav-toggle{display:inline-flex;order:2;}
-  .header-cta{order:3;}
+  .header-cta{order:3;margin-left:0;}
   .header-cta .btn{padding:9px 16px;font-size:0.85rem;}
   .nav-links{
     display:none;
