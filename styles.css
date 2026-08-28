@@ -1174,6 +1174,12 @@ section{padding:var(--space-2xl) 0;}
 .logo-count-badge .lc-name{font-size:0.76rem;font-weight:600;color:var(--color-fg);line-height:1.3;}
 .admlist-note{color:var(--color-muted-fg);font-size:0.85rem;margin-top:var(--space-md);}
 
+/* Dark-surface variant (used inside .trust on the homepage) */
+.admlist-group.on-dark h4{color:#F2F6FC;}
+.admlist-note.on-dark{color:#8FA0C2;}
+.logo-count-grid.on-dark .logo-box{border:none;box-shadow:0 10px 24px -10px rgba(0,0,0,0.45);}
+.logo-count-grid.on-dark .lc-name{color:#DCE6F5;}
+
 @media (max-width:768px){
   .stat-row{grid-template-columns:repeat(2, 1fr);}
   .ec-compare{grid-template-columns:1fr;}
