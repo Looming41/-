@@ -1,8 +1,9 @@
--- 유앤UP 국제컨설팅 — 미국입시뉴스 초기 게시글 (인스타그램 콘텐츠 이관)
--- Supabase SQL Editor에서 1회 실행하세요. 실행 후 news.html에서 바로 확인 가능합니다.
+-- 유앤UP 유학컨설팅 — 미국입시뉴스 초기 게시글 (인스타그램 콘텐츠 이관)
+-- 먼저 supabase-schema.sql을 다시 실행해서 news_posts.keyword 컬럼을 추가한 뒤 이 파일을 실행하세요.
+-- 이 6개 글을 이미 넣으셨다면 이 파일 대신 news-seed-keywords.sql(키워드만 채워넣는 UPDATE)을 실행하세요.
 -- 관리자 로그인 상태에서 "수정"으로 문구를 언제든 다듬을 수 있습니다.
 
-insert into news_posts (title, content, display_order) values
+insert into news_posts (title, content, keyword, display_order) values
 (
   '국제학교, 인가와 비인가는 뭐가 다를까?',
   '"국제학교 보내려고 하는데 인가, 비인가가 도대체 뭐가 달라요?" 상담에서 가장 많이 받는 질문 중 하나입니다.
@@ -37,6 +38,7 @@ insert into news_posts (title, content, display_order) values
 실제로 비인가 국제학교 출신 학생을 Brandeis, Northeastern, UC계열 등 세계적인 대학에 진학시킨 사례가 다수 있습니다.
 
 인가든 비인가든 정해진 정답은 없습니다. 아이의 성향, 진학 목표, 시기에 따라 가장 맞는 선택이 가장 좋은 선택입니다.',
+  '국제학교',
   1
 ),
 (
@@ -52,6 +54,7 @@ insert into news_posts (title, content, display_order) values
 - 국제학교의 경우 IB Diploma + AP 2~4개를 혼합하는 것도 좋은 전략입니다.
 
 지금 본인의 AP 개수가 학년 평균보다 적다면, 11학년 여름까지가 보충 설계의 마지막 기회입니다. 학년별 AP 로드맵이 궁금하다면 상담을 통해 현재 위치를 정확히 진단받아 보세요.',
+  'AP',
   2
 ),
 (
@@ -66,6 +69,7 @@ insert into news_posts (title, content, display_order) values
 - Need-Aware 학교(재정 상황을 지원 여부에 반영하는 학교)는 재정 계획을 신중하게 세워야 합니다.
 
 지원 리스트가 아이비리그에 치우쳐 있다면, 상담을 통해 안정권부터 도전권까지 균형 잡힌 리스트로 다시 설계해 드립니다.',
+  '지원전략',
   3
 ),
 (
@@ -77,6 +81,7 @@ insert into news_posts (title, content, display_order) values
 - 추천서를 9월에야 요청한 경우, 이미 늦은 경우가 많았습니다.
 
 이 중 자신에게 해당되는 항목이 있다면, 지금 바로 전체 지원 로드맵을 점검해볼 필요가 있습니다. 상담을 통해 남은 일정 안에서 무엇을 우선순위로 두어야 할지 정리해 드립니다.',
+  '입시트렌드',
   4
 ),
 (
@@ -98,6 +103,7 @@ insert into news_posts (title, content, display_order) values
 지금의 아이비리그는 더 이상 "관심이 많다"는 말로 들어갈 수 있는 자리가 아닙니다. "저는 이미 제가 속한 사회에서 제가 할 수 있는 최대한의 방법으로 제 몫을 실행 중입니다"라고 답할 수 있어야 합니다.
 
 그 길을 함께 설계합니다.',
+  '컨설팅철학',
   5
 ),
 (
@@ -120,5 +126,6 @@ insert into news_posts (title, content, display_order) values
 지금은 철저한 능력 사회입니다. 세계는 점점 더 까다로워지고 있고, 결국 입학사정관을 움직이는 건 지원자만의 색깔과 빛입니다.
 
 Rising G11·G12 학생과 학부모님, 지금까지 정말 애쓰셨습니다. 이제 함께 그 색깔을 끌어올려 볼 시간입니다.',
+  '여름방학',
   6
 );

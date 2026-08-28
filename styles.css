@@ -277,6 +277,31 @@ button:focus-visible{
 }
 .hero-photo img{width:100%;}
 
+.hero-media{
+  position:relative;
+  z-index:2;
+  width:360px;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+.hero-media-card{
+  position:relative;
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  border:4px solid #fff;
+  box-shadow:0 20px 40px -16px rgba(16,27,51,0.35);
+}
+.hero-media-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
+.hero-media-card:first-child{transform:rotate(-2deg);}
+.hero-media-card:last-child{transform:rotate(1.5deg);margin-left:36px;width:calc(100% - 36px);}
+.hero-media-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(0deg, rgba(11,23,48,0.88), transparent);
+  color:#fff;font-size:0.78rem;font-weight:700;
+  padding:22px 12px 8px;
+}
+
 /* ---------- Page hero (sub-pages) ---------- */
 .page-hero{
   position:relative;
@@ -653,6 +678,18 @@ section{padding:var(--space-2xl) 0;}
   border:1px solid var(--color-border);
   border-radius:var(--radius-md);
   padding:var(--space-lg);
+}
+.post-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+.post-head h3{margin-bottom:0;}
+.post-keyword{
+  display:inline-block;
+  background:var(--color-accent);
+  color:#fff;
+  font-size:0.72rem;
+  font-weight:700;
+  padding:3px 11px;
+  border-radius:999px;
+  flex-shrink:0;
 }
 .post-card h3{font-size:1.15rem;font-weight:800;margin-bottom:6px;}
 .post-card .date{font-size:0.78rem;color:var(--color-muted-fg);margin-bottom:12px;}
@@ -1066,6 +1103,37 @@ section{padding:var(--space-2xl) 0;}
 .stat-row.on-dark .stat-tile .value{color:#9DC0FF;}
 .stat-row.on-dark .stat-tile .label{color:#B7C5E0;}
 
+/* ---------- Achievement cards (연구협업 · 수상 · 장학) ---------- */
+.achieve-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:var(--space-md);
+}
+.achieve-card{
+  background:var(--color-card);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-md);
+  padding:var(--space-lg);
+  box-shadow:var(--shadow-card);
+}
+.achieve-badges{display:flex;gap:10px;margin-bottom:var(--space-md);}
+.achieve-badge{
+  width:56px;height:56px;border-radius:12px;flex-shrink:0;
+  background:#fff;border:1px solid var(--color-border);
+  display:flex;align-items:center;justify-content:center;padding:8px;
+}
+.achieve-badge img{width:100%;height:100%;object-fit:contain;}
+.achieve-badge-text{
+  font-size:0.78rem;font-weight:800;color:var(--color-accent);
+  background:rgba(47,111,237,0.08);border-color:rgba(47,111,237,0.2);
+}
+.achieve-tag{
+  display:inline-block;font-size:0.74rem;font-weight:700;color:var(--color-accent);
+  background:rgba(47,111,237,0.08);padding:3px 10px;border-radius:999px;margin-bottom:8px;
+}
+.achieve-card h3{font-size:1.02rem;font-weight:800;margin-bottom:6px;line-height:1.4;}
+.achieve-card p{font-size:0.86rem;color:var(--color-muted-fg);line-height:1.6;}
+
 /* ---------- Before/after comparison table (case studies) ---------- */
 .compare-table{width:100%;border-collapse:collapse;margin-top:var(--space-md);}
 .compare-table th, .compare-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--color-border);font-size:0.88rem;vertical-align:top;}
@@ -1276,6 +1344,7 @@ footer{background:var(--color-fg);color:#B9C4D9;padding:var(--space-xl) 0 var(--
 }
 @media (max-width:480px){
   .hero-photo{width:220px;}
+  .hero-media{width:260px;}
   .hero-visual .glow{width:300px;height:300px;}
   .cta-banner{padding:var(--space-lg) var(--space-md);margin:0 var(--space-sm);}
   .modal{padding:var(--space-lg) var(--space-md);}

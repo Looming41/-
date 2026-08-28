@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>미국입시뉴스 | 유앤UP 국제컨설팅</title>
-<meta name="description" content="미국 입시 정책 변화, 지원 마감일, 합격 트렌드를 정리해 전달하는 유앤UP 국제컨설팅의 입시 뉴스 페이지입니다.">
+<title>미국입시뉴스 | 유앤UP 유학컨설팅</title>
+<meta name="description" content="미국 입시 정책 변화, 지원 마감일, 합격 트렌드를 정리해 전달하는 유앤UP 유학컨설팅의 입시 뉴스 페이지입니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
 
 <header class="site-header">
   <div class="container">
-    <a href="index.html" class="logo"><img src="assets/logo-crest.png" alt="" class="logo-mark">유앤UP국제컨설팅</a>
+    <a href="index.html" class="logo"><img src="assets/logo-crest.png" alt="" class="logo-mark">유앤UP유학컨설팅</a>
     <nav class="nav-links" aria-label="주요 메뉴">
       <a href="terminal.html">터미널</a>
       <a href="philosophy.html">우리의 방향성</a>
@@ -51,7 +51,7 @@
         PROGRAM · 입시뉴스
       </span>
       <h1>미국 입시, <span class="highlight">가장 빠르게</span> 전달합니다</h1>
-      <p class="hero-sub">정책 변화, 지원 마감 일정, 합격 트렌드까지 — 유앤UP 국제컨설팅이 정리해 전달합니다.</p>
+      <p class="hero-sub">정책 변화, 지원 마감 일정, 합격 트렌드까지 — 유앤UP 유학컨설팅이 정리해 전달합니다.</p>
     </div>
   </section>
 
@@ -66,7 +66,7 @@
   <section>
     <div class="cta-banner">
       <h2>가장 빠른 입시 정보가 필요하다면</h2>
-      <p>상담예약을 통해 유앤UP 국제컨설팅의 최신 입시 정보를 직접 안내받으세요.</p>
+      <p>상담예약을 통해 유앤UP 유학컨설팅의 최신 입시 정보를 직접 안내받으세요.</p>
       <a href="booking.html" class="btn btn-primary">상담예약하기</a>
     </div>
   </section>
@@ -76,8 +76,8 @@
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="index.html" class="logo"><img src="assets/logo-crest.png" alt="" class="logo-mark">유앤UP국제컨설팅</a>
-        <p>미국 대학 입시 전략부터 합격까지, 유앤UP 국제컨설팅이 함께합니다.</p>
+        <a href="index.html" class="logo"><img src="assets/logo-crest.png" alt="" class="logo-mark">유앤UP유학컨설팅</a>
+        <p>미국 대학 입시 전략부터 합격까지, 유앤UP 유학컨설팅이 함께합니다.</p>
       </div>
       <div class="footer-cols">
         <div class="footer-col">
@@ -98,7 +98,7 @@
         </div>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 유앤UP 국제컨설팅. All rights reserved. · <a href="admin-login.html" style="text-decoration:underline;">관리자</a></div>
+    <div class="footer-bottom">© 2026 유앤UP 유학컨설팅. All rights reserved. · <a href="admin-login.html" style="text-decoration:underline;">관리자</a></div>
   </div>
 </footer>
 
@@ -108,9 +108,15 @@
     <h3 id="post-modal-title">글 추가</h3>
     <form id="post-form">
       <input type="hidden" id="post-form-id">
-      <div class="form-field">
-        <label for="post-title">제목</label>
-        <input type="text" id="post-title" required>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="post-title">제목</label>
+          <input type="text" id="post-title" required>
+        </div>
+        <div class="form-field">
+          <label for="post-keyword">키워드 <span class="optional">(선택)</span></label>
+          <input type="text" id="post-keyword" placeholder="예: AP, 국제학교">
+        </div>
       </div>
       <div class="form-field">
         <label for="post-content">내용</label>
@@ -171,7 +177,10 @@
     list.innerHTML = postsData.map(function (p) {
       return (
         '<div class="post-card">' +
+        '<div class="post-head">' +
+        (p.keyword ? '<span class="post-keyword">' + escapeHtml(p.keyword) + "</span>" : "") +
         "<h3>" + escapeHtml(p.title) + "</h3>" +
+        "</div>" +
         '<div class="date">' + formatDate(p.created_at) + "</div>" +
         '<div class="content">' + escapeHtml(p.content) + "</div>" +
         '<div class="admin-only card-actions">' +
@@ -189,6 +198,7 @@
     if (!p) return;
     document.getElementById("post-form-id").value = p.id;
     document.getElementById("post-title").value = p.title || "";
+    document.getElementById("post-keyword").value = p.keyword || "";
     document.getElementById("post-content").value = p.content || "";
     document.getElementById("post-modal-title").textContent = "글 수정";
     document.getElementById("post-submit-btn").textContent = "저장";
@@ -208,6 +218,7 @@
     var id = document.getElementById("post-form-id").value;
     var payload = {
       title: document.getElementById("post-title").value.trim(),
+      keyword: document.getElementById("post-keyword").value.trim() || null,
       content: document.getElementById("post-content").value.trim()
     };
     var query = id

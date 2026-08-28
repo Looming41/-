@@ -41,14 +41,16 @@ create table if not exists ec_achievements (
   created_at timestamptz default now()
 );
 
--- 4. News posts (미국입시뉴스)
+-- 4. News posts (미국입시뉴스). keyword = 제목 옆에 뜨는 태그 (예: "AP", "국제학교")
 create table if not exists news_posts (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   content text not null,
+  keyword text,
   display_order int default 0,
   created_at timestamptz default now()
 );
+alter table news_posts add column if not exists keyword text;
 
 -- 5. Admins — only user IDs listed here are treated as site admins.
 -- IMPORTANT: after running this script, register your existing admin login by running:
